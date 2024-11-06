@@ -1,3 +1,4 @@
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -12,8 +13,8 @@ export class Request {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  // user: User;
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  user: User;
 
   @Column({ type: 'varchar', length: 255 })
   title: string;

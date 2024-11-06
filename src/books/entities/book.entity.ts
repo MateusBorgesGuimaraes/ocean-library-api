@@ -1,3 +1,4 @@
+import { Category } from 'src/category/entities/category.entity';
 import {
   Column,
   CreateDateColumn,
@@ -24,8 +25,8 @@ export class Book {
   @Column({ type: 'int' })
   year: number;
 
-  @Column({ default: '' })
-  cover: string;
+  // @Column({ default: '' })
+  // cover: string;
 
   @Column({ type: 'varchar', length: 255 })
   isbn: string;
@@ -36,10 +37,10 @@ export class Book {
   @Column({ default: true })
   availability: boolean;
 
-  // @ManyToOne(() => Category, (category) => category.books, {
-  //   onDelete: 'SET NULL',
-  // })
-  // category: Category;
+  @ManyToOne(() => Category, (category) => category.books, {
+    onDelete: 'SET NULL',
+  })
+  category: Category;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -24,7 +24,7 @@ export class UsersService {
         passwordHash: createUserDto.password,
       };
 
-      console.log('userData', userData);
+      // console.log('userData', userData);
 
       const newUser = this.userRepository.create(userData);
       await this.userRepository.save(newUser);

@@ -5,12 +5,69 @@
 ### Exibe todos os usuarios
 GET {{baseUrl}}/users
 
+### Exibe um usuario pelo id
+GET {{baseUrl}}/users/2
+
 ### Cria um usuario
 POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "name": "Mateus",
-  "email": "mateus@example.com",
+  "name": "Sol",
+  "email": "sol@example.com",
   "password": "senha123"
+}
+
+
+
+
+# NEWS
+
+### Exibe todas as noticias
+GET {{baseUrl}}/news
+
+### Exibe uma noticia pelo id
+GET {{baseUrl}}/news/1
+
+### Cria uma noticia
+POST {{baseUrl}}/news
+Content-Type: application/json
+
+{
+  "titulo": "titulo de noticia deletavel",
+  "conteudo": "Conteudo de noticia deletavel",
+  "tags": ["deletval", "delete"]
+}
+
+### Atualiza uma noticia
+PATCH  {{baseUrl}}/news/1
+Content-Type: application/json
+
+{
+  "titulo": "Trump ganha as eleicoes",
+  "conteudo": "Apos Trump ganhar as eleicoes, houve diversas passeatas em comemoração a recandidatura bem sucedida... att",
+  "tags": ["politica", "presidencial", "att"]
+}
+
+### Deleta uma noticia
+DELETE {{baseUrl}}/news/3
+
+
+
+
+
+# CATEGORY
+
+### Exibe todas as categorias
+GET {{baseUrl}}/category
+
+### Exibe uma categoria pelo id
+GET {{baseUrl}}/category/3
+
+### Cria uma categoria
+POST {{baseUrl}}/category
+Content-Type: application/json
+
+{
+  "name": "deletavel"
 }
