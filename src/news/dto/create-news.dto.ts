@@ -1,18 +1,31 @@
-import { IsArray, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+  // IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateNewsDto {
   @IsString()
   @MaxLength(255)
   @IsNotEmpty()
-  titulo: string;
+  title: string;
 
   @IsString()
   @IsNotEmpty()
-  conteudo: string;
+  content: string;
 
-  // imagemCapa: string;
+  @IsString()
+  @IsOptional()
+  coverImage: string;
 
-  @IsArray()
-  @IsNotEmpty()
+  @IsString({ each: true })
+  @IsOptional()
   tags: string[];
+
+  @IsBoolean()
+  @IsOptional()
+  isActive: boolean;
 }

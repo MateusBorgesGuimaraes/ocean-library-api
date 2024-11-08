@@ -1,9 +1,12 @@
 import { Category } from 'src/category/entities/category.entity';
+import { Loan } from 'src/loans/entities/loan.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -39,12 +42,20 @@ export class Book {
 
   @ManyToOne(() => Category, (category) => category.books, {
     onDelete: 'SET NULL',
+    nullable: true,
   })
+  @JoinColumn({ name: 'category_id' })
   category: Category;
 
+  @OneToMany(() => Loan, (loan) => loan.book)
+  loans: Loan[];
+
+  @Column({ type: 'int', default: 1 })
+  quantidade: number;
+
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt?: Date;
 }

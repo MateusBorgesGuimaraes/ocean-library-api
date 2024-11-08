@@ -44,8 +44,8 @@ export class NewsService {
     if (!news) {
       throw new NotFoundException('News not found');
     }
-    news.titulo = updateNewsDto?.titulo ?? news.titulo;
-    news.conteudo = updateNewsDto?.conteudo ?? news.conteudo;
+    news.title = updateNewsDto?.title ?? news.title;
+    news.content = updateNewsDto?.content ?? news.content;
     news.tags = updateNewsDto?.tags ?? news.tags;
     // news.imagemCapa = updateNewsDto?.imagemCapa ?? news.imagemCapa;
     await this.newsRepository.save(news);

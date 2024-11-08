@@ -1,5 +1,6 @@
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsString,
   MaxLength,
@@ -9,16 +10,17 @@ import {
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(3)
   @MaxLength(100)
+  @MinLength(3)
   name: string;
 
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @IsNotEmpty()
-  @MinLength(5)
-  @MaxLength(100)
+  @IsString()
   password: string;
+
+  @IsEnum(['user', 'admin', 'librarian'])
+  role: string = 'user';
 }

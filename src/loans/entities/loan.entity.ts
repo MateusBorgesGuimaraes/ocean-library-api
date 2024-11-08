@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -14,10 +15,18 @@ export class Loan {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.loans, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.loans, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Book, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Book, (book) => book.loans, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  @JoinColumn({ name: 'book_id' })
   book: Book;
 
   @Column({ type: 'timestamp' })

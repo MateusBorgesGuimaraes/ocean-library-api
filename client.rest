@@ -6,20 +6,17 @@
 GET {{baseUrl}}/users
 
 ### Exibe um usuario pelo id
-GET {{baseUrl}}/users/2
+GET {{baseUrl}}/users/5
 
 ### Cria um usuario
 POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "name": "Sol",
-  "email": "sol@example.com",
+  "name": "camille",
+  "email": "camille@example.com",
   "password": "senha123"
 }
-
-
-
 
 # NEWS
 
@@ -27,33 +24,32 @@ Content-Type: application/json
 GET {{baseUrl}}/news
 
 ### Exibe uma noticia pelo id
-GET {{baseUrl}}/news/1
+GET {{baseUrl}}/news/6
 
 ### Cria uma noticia
 POST {{baseUrl}}/news
 Content-Type: application/json
 
 {
-  "titulo": "titulo de noticia deletavel",
-  "conteudo": "Conteudo de noticia deletavel",
-  "tags": ["deletval", "delete"]
+  "title": "Melhores mangas da atualidadefdsfsdf",
+  "content": "Com a cultura japonesa de ler mangas cada vez maisfdsf presente no mundo, separamos entao um compilado dos melhores ...",
+  "tags": ["japao", "manga", "recomendacao"],
+  "isActive": true
 }
 
 ### Atualiza uma noticia
-PATCH  {{baseUrl}}/news/1
+PATCH  {{baseUrl}}/news/7
 Content-Type: application/json
 
 {
-  "titulo": "Trump ganha as eleicoes",
-  "conteudo": "Apos Trump ganhar as eleicoes, houve diversas passeatas em comemoração a recandidatura bem sucedida... att",
-  "tags": ["politica", "presidencial", "att"]
+ "title": "Melhores mangas da atualidade",
+  "content": "Com a cultura japonesa de ler mangas cada vez mais presente no mundo, separamos entao um compilado dos melhores ...",
+  "tags": ["japao", "manga", "recomendacao"],
+  "isActive": true
 }
 
 ### Deleta uma noticia
-DELETE {{baseUrl}}/news/3
-
-
-
+DELETE {{baseUrl}}/news/8
 
 
 # CATEGORY
@@ -62,12 +58,15 @@ DELETE {{baseUrl}}/news/3
 GET {{baseUrl}}/category
 
 ### Exibe uma categoria pelo id
-GET {{baseUrl}}/category/3
+GET {{baseUrl}}/category/9
 
 ### Cria uma categoria
 POST {{baseUrl}}/category
 Content-Type: application/json
 
 {
-  "name": "deletavel"
+  "name": "delete"
 }
+
+### Deleta uma categoria
+DELETE {{baseUrl}}/category/10

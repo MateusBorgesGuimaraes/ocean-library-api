@@ -11,17 +11,41 @@ export class News {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
-  titulo: string;
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: false,
+  })
+  title: string;
 
-  @Column({ type: 'text' })
-  conteudo: string;
+  @Column({
+    type: 'text',
+    nullable: false,
+  })
+  content: string;
 
-  @Column({ default: '' })
-  imagemCapa: string;
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+    default: null,
+  })
+  coverImage: string;
 
-  @Column({ type: 'varchar', length: 100, array: true, nullable: true })
+  @Column({
+    type: 'varchar',
+    length: 100,
+    array: true,
+    nullable: true,
+    default: [],
+  })
   tags: string[];
+
+  @Column({
+    type: 'boolean',
+    default: true,
+  })
+  isActive: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

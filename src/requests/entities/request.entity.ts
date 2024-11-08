@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -13,7 +14,11 @@ export class Request {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.requests, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @Column({ type: 'varchar', length: 255 })
@@ -31,7 +36,11 @@ export class Request {
   @Column({ type: 'varchar', length: 255 })
   genre: string;
 
-  @Column({ default: 'pending' })
+  @Column({
+    type: 'varchar',
+    default: 'pending',
+    enum: ['pending', 'approved', 'rejected'],
+  })
   status: string;
 
   @CreateDateColumn()

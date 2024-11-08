@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -25,13 +26,17 @@ export class LibraryEvent {
   @Column({ type: 'varchar', length: 255 })
   location: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   banner: string;
 
   @Column({ type: 'int' })
   seats: number;
 
-  @ManyToOne(() => User, (user) => user.events, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.events, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @CreateDateColumn()

@@ -16,7 +16,9 @@ export class Category {
   @Column({ type: 'varchar', length: 100, unique: true })
   name: string;
 
-  @OneToMany(() => Book, (book) => book.category)
+  @OneToMany(() => Book, (book) => book.category, {
+    cascade: true,
+  })
   books: Book[];
 
   @CreateDateColumn()
