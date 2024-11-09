@@ -51,7 +51,7 @@ export class Book {
   loans: Loan[];
 
   @Column({ type: 'int', default: 1 })
-  quantidade: number;
+  quantity: number;
 
   @CreateDateColumn()
   createdAt?: Date;

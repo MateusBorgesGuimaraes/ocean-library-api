@@ -65,8 +65,44 @@ POST {{baseUrl}}/category
 Content-Type: application/json
 
 {
-  "name": "delete"
+  "name": "ciencia"
 }
 
 ### Deleta uma categoria
 DELETE {{baseUrl}}/category/10
+
+
+# BOOK
+
+### Exibe todos os livros
+GET {{baseUrl}}/books
+
+### Exibe um livro pelo id
+GET {{baseUrl}}/books/9
+
+### Cria um livro
+POST {{baseUrl}}/books
+Content-Type: application/json
+
+{
+  "title": "The Hobbit",
+  "author": "J.R.R. Tolkien",
+  "publisher": "Houghton Mifflin",
+  "year": 1937,
+  "isbn": "978-05479428227",
+  "synopsis": "The adventures of home-loving hobbit Bilbo Baggins who goes on an unexpected journey with a group of dwarves to reclaim their mountain home from a dragon.",
+  "availability": true,
+  "quantity": 7,
+  "category": 9
+}
+
+### Atualiza um livro
+PATCH  {{baseUrl}}/books/5
+Content-Type: application/json
+
+{
+  "title": "The Hobbit"
+}
+
+### Deleta um livro
+DELETE {{baseUrl}}/books/6
