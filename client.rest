@@ -65,7 +65,7 @@ POST {{baseUrl}}/category
 Content-Type: application/json
 
 {
-  "name": "ciencia"
+  "name": "filosofia"
 }
 
 ### Deleta uma categoria
@@ -85,15 +85,15 @@ POST {{baseUrl}}/books
 Content-Type: application/json
 
 {
-  "title": "The Hobbit",
-  "author": "J.R.R. Tolkien",
-  "publisher": "Houghton Mifflin",
-  "year": 1937,
-  "isbn": "978-05479428227",
-  "synopsis": "The adventures of home-loving hobbit Bilbo Baggins who goes on an unexpected journey with a group of dwarves to reclaim their mountain home from a dragon.",
+  "title": "The Art of War",
+  "author": "Sun Tzu",
+  "publisher": "Simon & Schuster",
+  "year": -500,
+  "isbn": "978-1590302255",
+  "synopsis": "An ancient Chinese military treatise that provides guidance on military strategy and tactics, which has influenced both military and business thinking.",
   "availability": true,
-  "quantity": 7,
-  "category": 9
+  "quantity": 6,
+  "category": 13
 }
 
 ### Atualiza um livro
@@ -106,3 +106,54 @@ Content-Type: application/json
 
 ### Deleta um livro
 DELETE {{baseUrl}}/books/6
+
+### Pesquisar um livro
+GET {{baseUrl}}/books/search?title=19
+
+
+
+
+
+# BOOK
+
+### Exibe todos os eventos
+GET {{baseUrl}}/library-events
+
+### Exibe um evento pelo id
+GET {{baseUrl}}/library-events/9
+
+### Cria um evento
+POST {{baseUrl}}/library-events
+Content-Type: application/json
+
+{
+  "title": "Summer Reading Workshop",
+  "description": "Join us for a summer reading workshop",
+  "date": "2024-07-15T14:00:00Z",
+  "location": "Main Library",
+  "banner": "summer-workshop.jpg",
+  "seats": 30
+}
+
+### Atualiza um evento
+PATCH  {{baseUrl}}/library-events/5
+Content-Type: application/json
+
+{
+  "title": "The Hobbit"
+}
+
+### Deleta um evento
+DELETE {{baseUrl}}/library-events/6
+
+// Registra um usuario para um evento
+POST /library-events/1/register
+{
+  "userId": 123
+}
+
+// Ve os registros no evento
+GET /library-events/1/registrations
+
+// Cancela o registro
+DELETE /library-events/1/registrations/123

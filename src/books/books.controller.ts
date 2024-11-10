@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { SearchBookDto } from './dto/search-book.dto';
 
 @Controller('books')
 export class BooksController {
@@ -20,9 +22,9 @@ export class BooksController {
     return this.booksService.create(createBookDto);
   }
 
-  @Get()
-  findAll() {
-    return this.booksService.findAll();
+  @Get('search')
+  searchBooks(@Query() searchDto: SearchBookDto) {
+    return this.booksService.searchBooks(searchDto);
   }
 
   @Get(':id')

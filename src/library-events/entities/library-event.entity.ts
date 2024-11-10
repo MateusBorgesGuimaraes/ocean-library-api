@@ -1,13 +1,12 @@
-import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { LibraryEventRegistration } from './library-event-registrations.entity';
 
 @Entity()
 export class LibraryEvent {
@@ -32,12 +31,11 @@ export class LibraryEvent {
   @Column({ type: 'int' })
   seats: number;
 
-  @ManyToOne(() => User, (user) => user.events, {
-    onDelete: 'CASCADE',
-    nullable: false,
-  })
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  @OneToMany(
+    () => LibraryEventRegistration,
+    (registration) => registration.event,
+  )
+  registrations: LibraryEventRegistration[];
 
   @CreateDateColumn()
   createdAt: Date;

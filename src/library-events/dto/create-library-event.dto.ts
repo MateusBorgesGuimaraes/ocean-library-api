@@ -1,5 +1,4 @@
 import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
-import { User } from 'src/users/entities/user.entity';
 
 export class CreateLibraryEventDto {
   @IsString()
@@ -20,7 +19,4 @@ export class CreateLibraryEventDto {
 
   @IsNumber()
   seats: number;
-
-  @IsOptional()
-  user: User;
 }

@@ -4,6 +4,7 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
 import { Repository } from 'typeorm';
+import { SearchBookDto } from './dto/search-book.dto';
 
 @Injectable()
 export class BooksService {
@@ -20,10 +21,6 @@ export class BooksService {
     } catch (error) {
       throw error;
     }
-  }
-
-  findAll() {
-    return `This action returns all books`;
   }
 
   async findOne(id: number) {
@@ -54,5 +51,55 @@ export class BooksService {
       throw new NotFoundException('Book not found');
     }
     return this.bookRepository.remove(book);
+  }
+
+  async searchBooks(searchDto: SearchBookDto) {
+    const queryBuilder = this.bookRepository
+      .createQueryBuilder('book')
+      .leftJoinAndSelect('book.category', 'category')
+      .skip((searchDto.page - 1) * searchDto.limit)
+      .take(searchDto.limit);
+
+    if (searchDto.title) {
+      queryBuilder.andWhere('LOWER(book.title) LIKE LOWER(:title)', {
+        title: `%${searchDto.title}%`,
+      });
+    }
+
+    if (searchDto.author) {
+      queryBuilder.andWhere('LOWER(book.author) LIKE LOWER(:author)', {
+        author: `%${searchDto.author}%`,
+      });
+    }
+
+    if (searchDto.publisher) {
+      queryBuilder.andWhere('LOWER(book.publisher) LIKE LOWER(:publisher)', {
+        publisher: `%${searchDto.publisher}%`,
+      });
+    }
+
+    if (searchDto.categoryId) {
+      queryBuilder.andWhere('category.id = :categoryId', {
+        categoryId: searchDto.categoryId,
+      });
+    }
+
+    if (searchDto.availability) {
+      queryBuilder.andWhere('book.availability = :availability', {
+        availability: searchDto.availability,
+      });
+    }
+
+    const [books, total] = await queryBuilder.getManyAndCount();
+
+    return {
+      data: books,
+      meta: {
+        page: searchDto.page,
+        limit: searchDto.limit,
+        total,
+        totalPages: Math.ceil(total / searchDto.limit),
+      },
+    };
   }
 }
