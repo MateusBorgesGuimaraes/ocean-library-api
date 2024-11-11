@@ -1,7 +1,6 @@
 import { IsEmail } from 'class-validator';
-// import { LibraryEvent } from 'src/library-events/entities/library-event.entity';
+import { LibraryEventRegistration } from 'src/library-events/entities/library-event-registrations.entity';
 import { Loan } from 'src/loans/entities/loan.entity';
-import { Request } from 'src/requests/entities/request.entity';
 
 import {
   Column,
@@ -39,15 +38,14 @@ export class User {
   })
   loans: Loan[];
 
-  // @OneToMany(() => LibraryEvent, (event) => event.user, {
-  //   cascade: true,
-  // })
-  // events: LibraryEvent[];
-
-  @OneToMany(() => Request, (request) => request.user, {
-    cascade: true,
-  })
-  requests: Request[];
+  @OneToMany(
+    () => LibraryEventRegistration,
+    (registration) => registration.user,
+    {
+      cascade: true,
+    },
+  )
+  events: LibraryEventRegistration[];
 
   @CreateDateColumn()
   createdAt: Date;

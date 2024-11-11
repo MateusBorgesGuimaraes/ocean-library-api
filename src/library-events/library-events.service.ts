@@ -78,6 +78,9 @@ export class LibraryEventsService {
 
     await this.registrationRepository.save(registration);
 
+    user.events = [...user.events, registration];
+    await this.userRepository.save(user);
+
     return {
       message: 'Successfully registered for the event',
       registrationId: registration.id,
@@ -129,6 +132,11 @@ export class LibraryEventsService {
         'Cannot cancel registration for past events',
       );
     }
+
+    registration.user.events = registration.user.events.filter(
+      (reg) => reg.id !== registration.id,
+    );
+    await this.userRepository.save(registration.user);
 
     await this.registrationRepository.remove(registration);
 

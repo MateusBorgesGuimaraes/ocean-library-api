@@ -5,10 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Loan } from 'src/loans/entities/loan.entity';
 import { Request } from 'src/requests/entities/request.entity';
 import { User } from './entities/user.entity';
-import { LibraryEvent } from 'src/library-events/entities/library-event.entity';
+import { LibraryEventRegistration } from 'src/library-events/entities/library-event-registrations.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), Loan, LibraryEvent, Request],
+  imports: [
+    TypeOrmModule.forFeature([User, LibraryEventRegistration]),
+    Loan,
+
+    Request,
+  ],
   controllers: [UsersController],
   providers: [UsersService],
 })

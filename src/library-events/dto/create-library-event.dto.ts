@@ -1,16 +1,26 @@
-import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 
 export class CreateLibraryEventDto {
   @IsString()
+  @IsNotEmpty()
   title: string;
 
   @IsString()
+  @IsNotEmpty()
   description: string;
 
-  @IsDate()
-  date: Date;
+  @IsString()
+  @IsNotEmpty()
+  date: string;
 
   @IsString()
+  @IsNotEmpty()
   location: string;
 
   @IsString()
@@ -18,5 +28,7 @@ export class CreateLibraryEventDto {
   banner: string;
 
   @IsNumber()
+  @IsNotEmpty()
+  @IsPositive()
   seats: number;
 }

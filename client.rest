@@ -13,8 +13,8 @@ POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "name": "camille",
-  "email": "camille@example.com",
+  "name": "ruby",
+  "email": "ruby@example.com",
   "password": "senha123"
 }
 
@@ -114,46 +114,72 @@ GET {{baseUrl}}/books/search?title=19
 
 
 
-# BOOK
+# EVENTS
 
 ### Exibe todos os eventos
 GET {{baseUrl}}/library-events
 
 ### Exibe um evento pelo id
-GET {{baseUrl}}/library-events/9
+GET {{baseUrl}}/library-events/3
 
 ### Cria um evento
 POST {{baseUrl}}/library-events
 Content-Type: application/json
 
 {
-  "title": "Summer Reading Workshop",
-  "description": "Join us for a summer reading workshop",
+  "title": "fsdfsf",
+  "description": "Test event with empty title",
   "date": "2024-07-15T14:00:00Z",
   "location": "Main Library",
-  "banner": "summer-workshop.jpg",
+  "banner": "test.jpg",
   "seats": 30
 }
 
 ### Atualiza um evento
-PATCH  {{baseUrl}}/library-events/5
+PATCH  {{baseUrl}}/library-events/3
 Content-Type: application/json
 
 {
-  "title": "The Hobbit"
+  "title": "Digital Research Workshop"
 }
 
 ### Deleta um evento
-DELETE {{baseUrl}}/library-events/6
+DELETE {{baseUrl}}/library-events/7
 
-// Registra um usuario para um evento
-POST /library-events/1/register
+### Registra um usuario para um evento
+POST {{baseUrl}}/library-events/3/register
+Content-Type: application/json
+
 {
-  "userId": 123
+  "userId": 10
 }
 
-// Ve os registros no evento
-GET /library-events/1/registrations
+### Ve os registros no evento
+GET {{baseUrl}}/library-events/3/registrations
 
-// Cancela o registro
-DELETE /library-events/1/registrations/123
+### Cancela o registro
+DELETE {{baseUrl}}/library-events/3/registrations/6
+
+
+
+
+
+# REQUEST
+
+### Exibe todos os requests
+GET {{baseUrl}}/requests
+
+### Cria um request
+POST {{baseUrl}}/requests
+Content-Type: application/json
+
+{
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "publisher": "Scribner",
+  "year": 1925,
+  "genre": "Classic Fiction"
+}
+
+### Deleta um request
+DELETE {{baseUrl}}/requests/6
