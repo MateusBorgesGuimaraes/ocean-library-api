@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { LibraryEventsService } from './library-events.service';
 import { CreateLibraryEventDto } from './dto/create-library-event.dto';
@@ -42,6 +43,11 @@ export class LibraryEventsController {
   @Get(':id/registrations')
   getEventRegistrations(@Param('id') id: string) {
     return this.libraryEventsService.getEventRegistrations(+id);
+  }
+
+  @Get('user/:userId/events')
+  async getUserEvents(@Param('userId', ParseIntPipe) userId: number) {
+    return this.libraryEventsService.getUserEvents(userId);
   }
 
   @Patch(':id')

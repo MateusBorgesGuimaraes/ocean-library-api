@@ -1,5 +1,3 @@
-import { Book } from 'src/books/entities/book.entity';
-import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -9,6 +7,17 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Book } from 'src/books/entities/book.entity';
+
+export enum LoanStatus {
+  PENDING = 'pending', // Initial state when loan is created
+  PICKED_UP = 'picked_up', // Book has been picked up
+  RETURNED = 'returned', // Book has been returned
+  RENEWED = 'renewed', // Loan has been renewed
+  CANCELLED = 'cancelled', // Loan was cancelled (not picked up in time)
+  OVERDUE = 'overdue', // Loan is past due date
+}
 
 @Entity()
 export class Loan {
@@ -29,14 +38,27 @@ export class Loan {
   @JoinColumn({ name: 'book_id' })
   book: Book;
 
-  @Column({ type: 'timestamp' })
-  startDate: Date;
+  @Column({
+    type: 'enum',
+    enum: LoanStatus,
+    default: LoanStatus.PENDING,
+  })
+  status: LoanStatus;
 
   @Column({ type: 'timestamp' })
-  endDate: Date;
+  requestDate: Date;
 
-  @Column({ default: false })
-  returned: boolean;
+  @Column({ type: 'timestamp', nullable: true })
+  pickupDate: Date;
+
+  @Column({ type: 'timestamp' })
+  dueDate: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  returnDate: Date;
+
+  @Column({ type: 'int', default: 0 })
+  renewalCount: number;
 
   @CreateDateColumn()
   createdAt: Date;

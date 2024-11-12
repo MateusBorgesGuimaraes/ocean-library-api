@@ -3,40 +3,73 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
+  Query,
+  ParseIntPipe,
+  Put,
+  NotFoundException,
 } from '@nestjs/common';
 import { LoansService } from './loans.service';
 import { CreateLoanDto } from './dto/create-loan.dto';
-import { UpdateLoanDto } from './dto/update-loan.dto';
+import { LoanStatus } from './entities/loan.entity';
 
 @Controller('loans')
 export class LoansController {
   constructor(private readonly loansService: LoansService) {}
 
   @Post()
-  create(@Body() createLoanDto: CreateLoanDto) {
-    return this.loansService.create(createLoanDto);
+  async createLoan(@Body() createLoanDto: CreateLoanDto) {
+    return this.loansService.createLoan(createLoanDto);
   }
 
   @Get()
-  findAll() {
-    return this.loansService.findAll();
+  async getAllLoans(
+    @Query('status') status?: LoanStatus,
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+  ) {
+    return this.loansService.getAllLoans(status, page, limit);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.loansService.findOne(+id);
+  async getLoanById(@Param('id', ParseIntPipe) id: number) {
+    const loan = await this.loansService.getLoanById(id);
+    if (!loan) {
+      throw new NotFoundException('Loan not found');
+    }
+    return loan;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLoanDto: UpdateLoanDto) {
-    return this.loansService.update(+id, updateLoanDto);
+  // @Put(':id/pickup')
+  // async pickupBook(@Param('id', ParseIntPipe) id: number) {
+  //   return this.loansService.pickupBook(id);
+  // }
+
+  @Put(':id/renew')
+  async renewLoan(@Param('id', ParseIntPipe) id: number) {
+    return this.loansService.renewLoan(id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.loansService.remove(+id);
+  @Put(':id/return')
+  async returnBook(@Param('id', ParseIntPipe) id: number) {
+    return this.loansService.returnBook(id);
+  }
+
+  // @Get('user/:userId')
+  // async getUserLoans(
+  //   @Param('userId', ParseIntPipe) userId: number,
+  //   @Query('status') status?: LoanStatus,
+  //   @Query('page', ParseIntPipe) page: number = 1,
+  //   @Query('limit', ParseIntPipe) limit: number = 10,
+  // ) {
+  //   return this.loansService.getUserLoans(userId, status, page, limit);
+  // }
+
+  @Get('status/overdue')
+  async getOverdueLoans(
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+  ) {
+    return this.loansService.getOverdueLoans(page, limit);
   }
 }

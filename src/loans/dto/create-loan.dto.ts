@@ -1,18 +1,9 @@
-import { IsBoolean, IsDate } from 'class-validator';
-import { Book } from 'src/books/entities/book.entity';
-import { User } from 'src/users/entities/user.entity';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateLoanDto {
-  @IsDate()
-  startDate: Date;
+  @IsNotEmpty()
+  userId: number;
 
-  @IsDate()
-  endDate: Date;
-
-  @IsBoolean()
-  returned: boolean;
-
-  user: User;
-
-  book: Book;
+  @IsNotEmpty()
+  bookId: number;
 }

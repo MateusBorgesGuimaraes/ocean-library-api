@@ -147,20 +147,21 @@ Content-Type: application/json
 DELETE {{baseUrl}}/library-events/7
 
 ### Registra um usuario para um evento
-POST {{baseUrl}}/library-events/3/register
+POST {{baseUrl}}/library-events/2/register
 Content-Type: application/json
 
 {
-  "userId": 10
+  "userId": 4
 }
 
 ### Ve os registros no evento
 GET {{baseUrl}}/library-events/3/registrations
 
+### Ve todos o eventos que o usuario esta cadastrado
+GET {{baseUrl}}/library-events/user/4/events
+
 ### Cancela o registro
-DELETE {{baseUrl}}/library-events/3/registrations/6
-
-
+DELETE {{baseUrl}}/library-events/2/registrations/4
 
 
 

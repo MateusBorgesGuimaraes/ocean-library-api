@@ -49,9 +49,11 @@ export class LibraryEventsService {
       throw new BadRequestException('Event has already occurred');
     }
 
-    const user = await this.userRepository.findOneBy({
-      id: registerDto.userId,
+    const user = await this.userRepository.findOne({
+      where: { id: registerDto.userId },
+      relations: ['events'],
     });
+
     if (!user) {
       throw new NotFoundException(
         `User with ID ${registerDto.userId} not found`,
@@ -77,9 +79,6 @@ export class LibraryEventsService {
     });
 
     await this.registrationRepository.save(registration);
-
-    user.events = [...user.events, registration];
-    await this.userRepository.save(user);
 
     return {
       message: 'Successfully registered for the event',
@@ -115,12 +114,13 @@ export class LibraryEventsService {
   }
 
   async cancelRegistration(eventId: number, userId: number) {
+    // Find registration with all necessary relations
     const registration = await this.registrationRepository.findOne({
       where: {
         event: { id: eventId },
         user: { id: userId },
       },
-      relations: ['event'],
+      relations: ['event', 'user'],
     });
 
     if (!registration) {
@@ -133,15 +133,13 @@ export class LibraryEventsService {
       );
     }
 
-    registration.user.events = registration.user.events.filter(
-      (reg) => reg.id !== registration.id,
-    );
-    await this.userRepository.save(registration.user);
-
+    // Simply remove the registration
     await this.registrationRepository.remove(registration);
 
     return {
       message: 'Registration successfully cancelled',
+      eventId: eventId,
+      userId: userId,
     };
   }
 
@@ -159,6 +157,56 @@ export class LibraryEventsService {
       throw new NotFoundException('Evento nao encontrado');
     }
     return libraryEvent;
+  }
+
+  async getUserEvents(userId: number) {
+    const registrations = await this.registrationRepository.find({
+      where: {
+        user: { id: userId },
+      },
+      relations: ['event', 'user'],
+      order: {
+        registeredAt: 'DESC',
+      },
+    });
+
+    if (!registrations.length) {
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+
+      return {
+        userId: user.id,
+        userName: user.name,
+        totalRegistrations: 0,
+        events: [],
+      };
+    }
+
+    const userEvents = registrations.map((registration) => ({
+      registrationId: registration.id,
+      event: {
+        id: registration.event.id,
+        title: registration.event.title,
+        description: registration.event.description,
+        date: registration.event.date,
+        location: registration.event.location,
+        seats: registration.event.seats,
+      },
+      registeredAt: registration.registeredAt,
+      attended: registration.attended,
+    }));
+
+    return {
+      userId: registrations[0].user.id,
+      userName: registrations[0].user.name,
+      totalRegistrations: userEvents.length,
+      events: userEvents,
+    };
   }
 
   async update(id: number, updateLibraryEventDto: UpdateLibraryEventDto) {
