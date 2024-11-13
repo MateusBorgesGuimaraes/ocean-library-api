@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Put,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { LoansService } from './loans.service';
 import { CreateLoanDto } from './dto/create-loan.dto';
@@ -22,12 +23,19 @@ export class LoansController {
     return this.loansService.createLoan(createLoanDto);
   }
 
-  @Get()
+  @Get('findAll')
   async getAllLoans(
     @Query('status') status?: LoanStatus,
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page') pageParam?: string,
+    @Query('limit') limitParam?: string,
   ) {
+    const page = pageParam ? parseInt(pageParam, 10) : 1;
+    const limit = limitParam ? parseInt(limitParam, 10) : 10;
+
+    if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
+      throw new BadRequestException('Invalid page or limit parameters');
+    }
+
     return this.loansService.getAllLoans(status, page, limit);
   }
 
@@ -40,10 +48,10 @@ export class LoansController {
     return loan;
   }
 
-  // @Put(':id/pickup')
-  // async pickupBook(@Param('id', ParseIntPipe) id: number) {
-  //   return this.loansService.pickupBook(id);
-  // }
+  @Put(':id/pickup')
+  async pickupBook(@Param('id', ParseIntPipe) id: number) {
+    return this.loansService.pickupBook(id);
+  }
 
   @Put(':id/renew')
   async renewLoan(@Param('id', ParseIntPipe) id: number) {
@@ -55,15 +63,17 @@ export class LoansController {
     return this.loansService.returnBook(id);
   }
 
-  // @Get('user/:userId')
-  // async getUserLoans(
-  //   @Param('userId', ParseIntPipe) userId: number,
-  //   @Query('status') status?: LoanStatus,
-  //   @Query('page', ParseIntPipe) page: number = 1,
-  //   @Query('limit', ParseIntPipe) limit: number = 10,
-  // ) {
-  //   return this.loansService.getUserLoans(userId, status, page, limit);
-  // }
+  @Get('user/:userId')
+  async getUserLoans(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Query('status') status?: LoanStatus,
+    @Query('page') pageParam?: string,
+    @Query('limit') limitParam?: string,
+  ) {
+    const page = pageParam ? parseInt(pageParam, 10) : 1;
+    const limit = limitParam ? parseInt(limitParam, 10) : 10;
+    return this.loansService.getUserLoans(userId, status, page, limit);
+  }
 
   @Get('status/overdue')
   async getOverdueLoans(
@@ -71,5 +81,10 @@ export class LoansController {
     @Query('limit', ParseIntPipe) limit: number = 10,
   ) {
     return this.loansService.getOverdueLoans(page, limit);
+  }
+
+  @Get('/statistics')
+  async loanStatistics() {
+    return this.loansService.getLoanStatistics();
   }
 }

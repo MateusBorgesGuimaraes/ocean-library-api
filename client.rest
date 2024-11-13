@@ -108,7 +108,7 @@ Content-Type: application/json
 DELETE {{baseUrl}}/books/6
 
 ### Pesquisar um livro
-GET {{baseUrl}}/books/search?title=19
+GET {{baseUrl}}/books/search
 
 
 
@@ -184,3 +184,40 @@ Content-Type: application/json
 
 ### Deleta um request
 DELETE {{baseUrl}}/requests/6
+
+
+
+
+
+
+# LOAN
+
+### Cria um loan
+POST {{baseUrl}}/loans
+Content-Type: application/json
+
+{
+  "userId": 10,
+  "bookId": 7
+}
+
+### Pega o loan por id
+GET {{baseUrl}}/loans/3
+
+### Pega todos os loan 
+GET {{baseUrl}}/loans/findAll/?status=renewed
+
+### Pega o livro
+PUT {{baseUrl}}/loans/3/pickup
+
+### Renova o emprestimo
+PUT {{baseUrl}}/loans/2/renew
+
+### Retorna o livro
+PUT {{baseUrl}}/loans/1/return
+
+### Pega todos os emprestimos do usuario
+GET {{baseUrl}}/loans/user/10?status=picked_up
+
+### Pega as estatisticas dos esmprestimos
+GET {{baseUrl}}/loans/statistics

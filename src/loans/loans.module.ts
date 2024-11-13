@@ -7,7 +7,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Book } from 'src/books/entities/book.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Loan]), User, Book],
+  imports: [TypeOrmModule.forFeature([Loan, Book, User])],
   controllers: [LoansController],
   providers: [LoansService],
 })

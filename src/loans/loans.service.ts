@@ -70,6 +70,25 @@ export class LoansService {
     return this.loanRepository.save(loan);
   }
 
+  async pickupBook(loanId: number): Promise<Loan> {
+    const loan = await this.loanRepository.findOne({
+      where: { id: loanId },
+    });
+
+    if (!loan) {
+      throw new NotFoundException('Loan not found');
+    }
+
+    if (loan.status !== LoanStatus.PENDING) {
+      throw new BadRequestException('Can only pick up active loans');
+    }
+
+    loan.status = LoanStatus.PICKED_UP;
+    loan.pickupDate = new Date();
+
+    return this.loanRepository.save(loan);
+  }
+
   async renewLoan(loanId: number): Promise<Loan> {
     const loan = await this.loanRepository.findOne({
       where: { id: loanId },
@@ -131,6 +150,38 @@ export class LoansService {
         await this.loanRepository.save(loan);
       }
     }
+  }
+
+  async getUserLoans(
+    userId: number,
+    status?: LoanStatus,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    const query = this.loanRepository
+      .createQueryBuilder('loan')
+      .leftJoinAndSelect('loan.book', 'book')
+      .leftJoinAndSelect('loan.user', 'user')
+      .where('user.id = :userId', { userId });
+
+    if (status) {
+      query.andWhere('loan.status = :status', { status });
+    }
+
+    const [loans, total] = await query
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    return {
+      data: loans,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async getAllLoans(status?: LoanStatus, page: number = 1, limit: number = 10) {
@@ -196,6 +247,7 @@ export class LoansService {
   }
 
   async getLoanStatistics() {
+    console.log('passou no getLoanStatistics');
     const stats = await this.loanRepository
       .createQueryBuilder('loan')
       .select([
@@ -211,10 +263,12 @@ export class LoansService {
 
     return {
       ...stats,
-      averageLoanDuration: await this.calculateAverageLoanDuration(),
+      averageLoanDuration: await this.getAverageLoanDuration(),
     };
   }
-  private async calculateAverageLoanDuration() {
+
+  private async getAverageLoanDuration() {
+    console.log('passou bo getAverageLoanDuration');
     const completedLoans = await this.loanRepository.find({
       where: { status: LoanStatus.RETURNED },
       select: ['pickupDate', 'returnDate'],
