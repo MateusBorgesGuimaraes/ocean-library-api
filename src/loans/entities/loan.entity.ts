@@ -11,12 +11,12 @@ import { User } from 'src/users/entities/user.entity';
 import { Book } from 'src/books/entities/book.entity';
 
 export enum LoanStatus {
-  PENDING = 'pending', // Initial state when loan is created
-  PICKED_UP = 'picked_up', // Book has been picked up
-  RETURNED = 'returned', // Book has been returned
-  RENEWED = 'renewed', // Loan has been renewed
-  CANCELLED = 'cancelled', // Loan was cancelled (not picked up in time)
-  OVERDUE = 'overdue', // Loan is past due date
+  PENDING = 'pending',
+  PICKED_UP = 'picked_up',
+  RETURNED = 'returned',
+  RENEWED = 'renewed',
+  CANCELLED = 'cancelled',
+  OVERDUE = 'overdue',
 }
 
 @Entity()

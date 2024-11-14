@@ -18,6 +18,19 @@ import { LoanStatus } from './entities/loan.entity';
 export class LoansController {
   constructor(private readonly loansService: LoansService) {}
 
+  @Get('statistics')
+  async getLoanStatistics() {
+    console.log('Accessing statistics endpoint');
+    try {
+      const stats = await this.loansService.getLoanStatistics();
+      console.log('Statistics retrieved:', stats);
+      return stats;
+    } catch (error) {
+      console.error('Statistics error:', error);
+      throw new BadRequestException(`Statistics error: ${error.message}`);
+    }
+  }
+
   @Post()
   async createLoan(@Body() createLoanDto: CreateLoanDto) {
     return this.loansService.createLoan(createLoanDto);
@@ -83,8 +96,11 @@ export class LoansController {
     return this.loansService.getOverdueLoans(page, limit);
   }
 
-  @Get('/statistics')
-  async loanStatistics() {
-    return this.loansService.getLoanStatistics();
+  @Get('directly/:bookId/:userId')
+  async getBookdirectly(
+    @Param('bookId', ParseIntPipe) bookId: number,
+    @Param('userId', ParseIntPipe) userId: number,
+  ) {
+    return this.loansService.getBookdirectly(bookId, userId);
   }
 }

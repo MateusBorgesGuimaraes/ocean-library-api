@@ -8,13 +8,16 @@ GET {{baseUrl}}/users
 ### Exibe um usuario pelo id
 GET {{baseUrl}}/users/5
 
+### Pesquisa um usuario pelo email
+GET {{baseUrl}}/users/search/email?email=ru
+
 ### Cria um usuario
 POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "name": "ruby",
-  "email": "ruby@example.com",
+  "name": "rui",
+  "email": "rui@example.com",
   "password": "senha123"
 }
 
@@ -73,9 +76,6 @@ DELETE {{baseUrl}}/category/10
 
 
 # BOOK
-
-### Exibe todos os livros
-GET {{baseUrl}}/books
 
 ### Exibe um livro pelo id
 GET {{baseUrl}}/books/9
@@ -186,10 +186,6 @@ Content-Type: application/json
 DELETE {{baseUrl}}/requests/6
 
 
-
-
-
-
 # LOAN
 
 ### Cria um loan
@@ -221,3 +217,6 @@ GET {{baseUrl}}/loans/user/10?status=picked_up
 
 ### Pega as estatisticas dos esmprestimos
 GET {{baseUrl}}/loans/statistics
+
+### Pega o livro diretamente na biblioteca
+GET {{baseUrl}}/loans/directly/3/11

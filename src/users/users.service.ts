@@ -6,7 +6,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -52,5 +52,27 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  async findByEmail(email: string) {
+    const users = await this.userRepository.find({
+      where: {
+        email: ILike(`%${email}%`),
+      },
+      select: ['id', 'name', 'email', 'role', 'createdAt', 'updatedAt'],
+      order: {
+        email: 'ASC',
+      },
+      take: 10,
+    });
+
+    if (users.length === 0) {
+      throw new NotFoundException('Nenhum usuário encontrado com este email');
+    }
+
+    return {
+      total: users.length,
+      users: users,
+    };
   }
 }

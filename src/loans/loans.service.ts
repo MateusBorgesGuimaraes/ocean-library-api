@@ -70,6 +70,34 @@ export class LoansService {
     return this.loanRepository.save(loan);
   }
 
+  async getBookdirectly(bookId: number, userId: number): Promise<Loan> {
+    const book = await this.bookRepository.findOne({
+      where: { id: bookId },
+    });
+
+    if (!book) {
+      throw new NotFoundException('Book not found');
+    }
+
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const loan = this.loanRepository.create({
+      user,
+      book,
+      status: LoanStatus.PICKED_UP,
+      requestDate: new Date(),
+      dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    });
+
+    return this.loanRepository.save(loan);
+  }
+
   async pickupBook(loanId: number): Promise<Loan> {
     const loan = await this.loanRepository.findOne({
       where: { id: loanId },
