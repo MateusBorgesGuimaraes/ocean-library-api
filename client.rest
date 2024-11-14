@@ -4,6 +4,7 @@
 
 ### Exibe todos os usuarios
 GET {{baseUrl}}/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6Im5lbGxpZWxAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzE2MTY4NTQsImV4cCI6MTczMTYyMDQ1NCwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.JvAvqgLX4prpfSrmw9yUUPA4VEzLKhbrTKvvmmUJpbU
 
 ### Exibe um usuario pelo id
 GET {{baseUrl}}/users/5
@@ -16,8 +17,8 @@ POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "name": "rui",
-  "email": "rui@example.com",
+  "name": "nelliel",
+  "email": "nelliel@example.com",
   "password": "senha123"
 }
 
@@ -220,3 +221,16 @@ GET {{baseUrl}}/loans/statistics
 
 ### Pega o livro diretamente na biblioteca
 GET {{baseUrl}}/loans/directly/3/11
+
+
+
+# AUTH
+
+### Loga um usuario
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "nelliel@example.com",
+  "password": "senha123"
+}
