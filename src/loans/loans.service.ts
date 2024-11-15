@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,6 +10,7 @@ import { Loan, LoanStatus } from './entities/loan.entity';
 import { Book } from 'src/books/entities/book.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 
 @Injectable()
 export class LoansService {
@@ -21,7 +23,10 @@ export class LoansService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async createLoan(createLoanDto: CreateLoanDto): Promise<Loan> {
+  async createLoan(
+    createLoanDto: CreateLoanDto,
+    tokenPayload: TokenPayloadDto,
+  ): Promise<Loan> {
     const book = await this.bookRepository.findOne({
       where: { id: createLoanDto.bookId },
     });
@@ -40,6 +45,10 @@ export class LoansService {
 
     if (!user) {
       throw new NotFoundException('User not found');
+    }
+
+    if (user.id !== tokenPayload.sub) {
+      throw new ForbiddenException('Cannot create loan for another user');
     }
 
     const hasOverdueBooks = await this.loanRepository.findOne({
@@ -98,13 +107,18 @@ export class LoansService {
     return this.loanRepository.save(loan);
   }
 
-  async pickupBook(loanId: number): Promise<Loan> {
-    const loan = await this.loanRepository.findOne({
-      where: { id: loanId },
-    });
+  async pickupBook(
+    loanId: number,
+    tokenPayload: TokenPayloadDto,
+  ): Promise<Loan> {
+    const loan = await this.getLoanById(loanId);
 
     if (!loan) {
       throw new NotFoundException('Loan not found');
+    }
+
+    if (loan.user.id !== tokenPayload.sub) {
+      throw new ForbiddenException('You are not the owner of this loan');
     }
 
     if (loan.status !== LoanStatus.PENDING) {
@@ -117,13 +131,18 @@ export class LoansService {
     return this.loanRepository.save(loan);
   }
 
-  async renewLoan(loanId: number): Promise<Loan> {
-    const loan = await this.loanRepository.findOne({
-      where: { id: loanId },
-    });
+  async renewLoan(
+    loanId: number,
+    tokenPayload: TokenPayloadDto,
+  ): Promise<Loan> {
+    const loan = await this.getLoanById(loanId);
 
     if (!loan) {
       throw new NotFoundException('Loan not found');
+    }
+
+    if (loan.user.id !== tokenPayload.sub) {
+      throw new ForbiddenException('You are not the owner of this loan');
     }
 
     if (loan.status !== LoanStatus.PICKED_UP) {
@@ -141,11 +160,11 @@ export class LoansService {
     return this.loanRepository.save(loan);
   }
 
-  async returnBook(loanId: number): Promise<Loan> {
-    const loan = await this.loanRepository.findOne({
-      where: { id: loanId },
-      relations: ['book'],
-    });
+  async returnBook(
+    loanId: number,
+    tokenPayload: TokenPayloadDto,
+  ): Promise<Loan> {
+    const loan = await this.getLoanById(loanId);
 
     if (!loan) {
       throw new NotFoundException('Loan not found');
@@ -155,12 +174,17 @@ export class LoansService {
       throw new BadRequestException('Book already has benn returned');
     }
 
+    if (loan.user.id !== tokenPayload.sub) {
+      throw new ForbiddenException('You are not the owner of this loan');
+    }
+
     loan.status = LoanStatus.RETURNED;
     loan.returnDate = new Date();
 
     const book = loan.book;
     book.quantity += 1;
     book.availability = true;
+
     await this.bookRepository.save(book);
 
     return this.loanRepository.save(loan);
@@ -182,10 +206,15 @@ export class LoansService {
 
   async getUserLoans(
     userId: number,
+    tokenPayload: TokenPayloadDto,
     status?: LoanStatus,
     page: number = 1,
     limit: number = 10,
   ) {
+    if (userId !== tokenPayload.sub) {
+      throw new ForbiddenException('You are not the owner of this loan');
+    }
+
     const query = this.loanRepository
       .createQueryBuilder('loan')
       .leftJoinAndSelect('loan.book', 'book')

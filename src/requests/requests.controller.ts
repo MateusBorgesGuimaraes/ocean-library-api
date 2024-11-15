@@ -1,6 +1,15 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { RequestsService } from './requests.service';
 import { CreateRequestDto } from './dto/create-request.dto';
+import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 
 @Controller('requests')
 export class RequestsController {
@@ -12,11 +21,13 @@ export class RequestsController {
   }
 
   @Get()
+  @UseGuards(AuthTokenGuard)
   findAll() {
     return this.requestsService.findAll();
   }
 
   @Delete(':id')
+  @UseGuards(AuthTokenGuard)
   remove(@Param('id') id: string) {
     return this.requestsService.remove(+id);
   }

@@ -12,7 +12,6 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 
-@UseGuards(AuthTokenGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -22,16 +21,19 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @UseGuards(AuthTokenGuard)
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
+  @UseGuards(AuthTokenGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
   }
 
+  @UseGuards(AuthTokenGuard)
   @Get('search/email')
   async findByEmail(@Query('email') email: string) {
     if (!email) {

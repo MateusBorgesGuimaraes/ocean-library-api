@@ -9,11 +9,16 @@ import {
   Put,
   NotFoundException,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { LoansService } from './loans.service';
 import { CreateLoanDto } from './dto/create-loan.dto';
 import { LoanStatus } from './entities/loan.entity';
+import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+import { TokenPayloadParam } from 'src/auth/params/token-payload.param';
+import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 
+@UseGuards(AuthTokenGuard)
 @Controller('loans')
 export class LoansController {
   constructor(private readonly loansService: LoansService) {}
@@ -32,8 +37,11 @@ export class LoansController {
   }
 
   @Post()
-  async createLoan(@Body() createLoanDto: CreateLoanDto) {
-    return this.loansService.createLoan(createLoanDto);
+  async createLoan(
+    @Body() createLoanDto: CreateLoanDto,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.loansService.createLoan(createLoanDto, tokenPayload);
   }
 
   @Get('findAll')
@@ -62,30 +70,47 @@ export class LoansController {
   }
 
   @Put(':id/pickup')
-  async pickupBook(@Param('id', ParseIntPipe) id: number) {
-    return this.loansService.pickupBook(id);
+  async pickupBook(
+    @Param('id', ParseIntPipe) id: number,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    console.log('id', id);
+    return this.loansService.pickupBook(id, tokenPayload);
   }
 
   @Put(':id/renew')
-  async renewLoan(@Param('id', ParseIntPipe) id: number) {
-    return this.loansService.renewLoan(id);
+  async renewLoan(
+    @Param('id', ParseIntPipe) id: number,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.loansService.renewLoan(id, tokenPayload);
   }
 
   @Put(':id/return')
-  async returnBook(@Param('id', ParseIntPipe) id: number) {
-    return this.loansService.returnBook(id);
+  async returnBook(
+    @Param('id', ParseIntPipe) id: number,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.loansService.returnBook(id, tokenPayload);
   }
 
   @Get('user/:userId')
   async getUserLoans(
     @Param('userId', ParseIntPipe) userId: number,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
     @Query('status') status?: LoanStatus,
     @Query('page') pageParam?: string,
     @Query('limit') limitParam?: string,
   ) {
     const page = pageParam ? parseInt(pageParam, 10) : 1;
     const limit = limitParam ? parseInt(limitParam, 10) : 10;
-    return this.loansService.getUserLoans(userId, status, page, limit);
+    return this.loansService.getUserLoans(
+      userId,
+      tokenPayload,
+      status,
+      page,
+      limit,
+    );
   }
 
   @Get('status/overdue')

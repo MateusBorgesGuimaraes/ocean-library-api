@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,6 +12,7 @@ import { LibraryEvent } from './entities/library-event.entity';
 import { LibraryEventRegistration } from './entities/library-event-registrations.entity';
 import { User } from 'src/users/entities/user.entity';
 import { RegisterEventDto } from './dto/register-event.dto';
+import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 
 @Injectable()
 export class LibraryEventsService {
@@ -31,7 +33,16 @@ export class LibraryEventsService {
     return result;
   }
 
-  async registerForEvent(eventId: number, registerDto: RegisterEventDto) {
+  async registerForEvent(
+    eventId: number,
+    registerDto: RegisterEventDto,
+    tokenPayload: TokenPayloadDto,
+  ) {
+    if (registerDto.userId !== tokenPayload.sub) {
+      throw new ForbiddenException(
+        'You are not authorized to register for this event',
+      );
+    }
     const event = await this.libraryEventsRepository.findOne({
       where: { id: eventId },
       relations: ['registrations'],
@@ -113,8 +124,14 @@ export class LibraryEventsService {
     };
   }
 
-  async cancelRegistration(eventId: number, userId: number) {
-    // Find registration with all necessary relations
+  async cancelRegistration(
+    eventId: number,
+    userId: number,
+    tokenPayload: TokenPayloadDto,
+  ) {
+    if (userId !== tokenPayload.sub) {
+      throw new ForbiddenException('You are not the owner of this user');
+    }
     const registration = await this.registrationRepository.findOne({
       where: {
         event: { id: eventId },
@@ -159,7 +176,10 @@ export class LibraryEventsService {
     return libraryEvent;
   }
 
-  async getUserEvents(userId: number) {
+  async getUserEvents(userId: number, tokenPayload: TokenPayloadDto) {
+    if (userId !== tokenPayload.sub) {
+      throw new ForbiddenException('You are not the owner of this user');
+    }
     const registrations = await this.registrationRepository.find({
       where: {
         user: { id: userId },

@@ -1,16 +1,19 @@
 @baseUrl = http://localhost:3000
+@authToken = {{authenticate.response.body.accessToken}}
 
 # USER
 
 ### Exibe todos os usuarios
 GET {{baseUrl}}/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6Im5lbGxpZWxAZXhhbXBsZS5jb20iLCJpYXQiOjE3MzE2MTY4NTQsImV4cCI6MTczMTYyMDQ1NCwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.JvAvqgLX4prpfSrmw9yUUPA4VEzLKhbrTKvvmmUJpbU
+Authorization: Bearer {{authToken}}
 
 ### Exibe um usuario pelo id
-GET {{baseUrl}}/users/5
+GET {{baseUrl}}/users/11
+Authorization: Bearer {{authToken}}
 
 ### Pesquisa um usuario pelo email
 GET {{baseUrl}}/users/search/email?email=ru
+Authorization: Bearer {{authToken}}
 
 ### Cria um usuario
 POST {{baseUrl}}/users
@@ -32,6 +35,7 @@ GET {{baseUrl}}/news/6
 
 ### Cria uma noticia
 POST {{baseUrl}}/news
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
@@ -43,6 +47,7 @@ Content-Type: application/json
 
 ### Atualiza uma noticia
 PATCH  {{baseUrl}}/news/7
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
@@ -54,6 +59,7 @@ Content-Type: application/json
 
 ### Deleta uma noticia
 DELETE {{baseUrl}}/news/8
+Authorization: Bearer {{authToken}}
 
 
 # CATEGORY
@@ -66,6 +72,7 @@ GET {{baseUrl}}/category/9
 
 ### Cria uma categoria
 POST {{baseUrl}}/category
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
@@ -74,6 +81,7 @@ Content-Type: application/json
 
 ### Deleta uma categoria
 DELETE {{baseUrl}}/category/10
+Authorization: Bearer {{authToken}}
 
 
 # BOOK
@@ -83,6 +91,7 @@ GET {{baseUrl}}/books/9
 
 ### Cria um livro
 POST {{baseUrl}}/books
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
@@ -99,6 +108,7 @@ Content-Type: application/json
 
 ### Atualiza um livro
 PATCH  {{baseUrl}}/books/5
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
@@ -107,6 +117,7 @@ Content-Type: application/json
 
 ### Deleta um livro
 DELETE {{baseUrl}}/books/6
+Authorization: Bearer {{authToken}}
 
 ### Pesquisar um livro
 GET {{baseUrl}}/books/search
@@ -125,6 +136,7 @@ GET {{baseUrl}}/library-events/3
 
 ### Cria um evento
 POST {{baseUrl}}/library-events
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
@@ -138,6 +150,7 @@ Content-Type: application/json
 
 ### Atualiza um evento
 PATCH  {{baseUrl}}/library-events/3
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
@@ -146,30 +159,35 @@ Content-Type: application/json
 
 ### Deleta um evento
 DELETE {{baseUrl}}/library-events/7
+Authorization: Bearer {{authToken}}
 
 ### Registra um usuario para um evento
-POST {{baseUrl}}/library-events/2/register
+POST {{baseUrl}}/library-events/5/register
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "userId": 4
+  "userId": 12
 }
 
 ### Ve os registros no evento
 GET {{baseUrl}}/library-events/3/registrations
+Authorization: Bearer {{authToken}}
 
 ### Ve todos o eventos que o usuario esta cadastrado
-GET {{baseUrl}}/library-events/user/4/events
+GET {{baseUrl}}/library-events/user/12/events
+Authorization: Bearer {{authToken}}
 
 ### Cancela o registro
-DELETE {{baseUrl}}/library-events/2/registrations/4
-
+DELETE {{baseUrl}}/library-events/3/registrations/12
+Authorization: Bearer {{authToken}}
 
 
 # REQUEST
 
 ### Exibe todos os requests
 GET {{baseUrl}}/requests
+Authorization: Bearer {{authToken}}
 
 ### Cria um request
 POST {{baseUrl}}/requests
@@ -185,48 +203,59 @@ Content-Type: application/json
 
 ### Deleta um request
 DELETE {{baseUrl}}/requests/6
+Authorization: Bearer {{authToken}}
 
 
 # LOAN
 
 ### Cria um loan
 POST {{baseUrl}}/loans
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "userId": 10,
+  "userId": 12,
   "bookId": 7
 }
 
 ### Pega o loan por id
 GET {{baseUrl}}/loans/3
+Authorization: Bearer {{authToken}}
 
 ### Pega todos os loan 
 GET {{baseUrl}}/loans/findAll/?status=renewed
+Authorization: Bearer {{authToken}}
 
 ### Pega o livro
-PUT {{baseUrl}}/loans/3/pickup
+PUT {{baseUrl}}/loans/5/pickup
+Authorization: Bearer {{authToken}}
 
 ### Renova o emprestimo
-PUT {{baseUrl}}/loans/2/renew
+PUT {{baseUrl}}/loans/5/renew
+Authorization: Bearer {{authToken}}
 
 ### Retorna o livro
-PUT {{baseUrl}}/loans/1/return
+PUT {{baseUrl}}/loans/5/return
+Authorization: Bearer {{authToken}}
 
 ### Pega todos os emprestimos do usuario
-GET {{baseUrl}}/loans/user/10?status=picked_up
+GET {{baseUrl}}/loans/user/12?status=picked_up
+Authorization: Bearer {{authToken}}
 
 ### Pega as estatisticas dos esmprestimos
 GET {{baseUrl}}/loans/statistics
+Authorization: Bearer {{authToken}}
 
 ### Pega o livro diretamente na biblioteca
 GET {{baseUrl}}/loans/directly/3/11
+Authorization: Bearer {{authToken}}
 
 
 
 # AUTH
 
 ### Loga um usuario
+# @name authenticate
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
