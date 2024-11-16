@@ -6,6 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 
 export class CreateUserDto {
   @IsString()
@@ -21,6 +22,6 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
-  @IsEnum(['user', 'admin', 'librarian'])
-  role: string = 'user';
+  @IsEnum(RoutePolicies, { each: true })
+  permitions: RoutePolicies[] = [RoutePolicies.user];
 }

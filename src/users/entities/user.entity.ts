@@ -1,4 +1,5 @@
 import { IsEmail } from 'class-validator';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 import { LibraryEventRegistration } from 'src/library-events/entities/library-event-registrations.entity';
 import { Loan } from 'src/loans/entities/loan.entity';
 
@@ -26,13 +27,6 @@ export class User {
   @Column({ length: 255 })
   passwordHash: string;
 
-  @Column({
-    type: 'varchar',
-    default: 'user',
-    enum: ['user', 'admin', 'librarian'],
-  })
-  role: string;
-
   @OneToMany(() => Loan, (loan) => loan.user, {
     cascade: true,
   })
@@ -52,4 +46,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ type: 'simple-array', default: [] })
+  permitions: RoutePolicies[];
 }

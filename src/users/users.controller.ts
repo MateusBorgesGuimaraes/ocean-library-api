@@ -11,6 +11,9 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
+import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 
 @Controller('users')
 export class UsersController {
@@ -21,7 +24,8 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.user)
+  @UseGuards(AuthAndPolicyGuard)
   @Get()
   findAll() {
     return this.usersService.findAll();

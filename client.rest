@@ -20,8 +20,8 @@ POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "name": "nelliel",
-  "email": "nelliel@example.com",
+  "name": "hallibel",
+  "email": "hallibel@example.com",
   "password": "senha123"
 }
 
@@ -260,6 +260,6 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "nelliel@example.com",
+  "email": "hallibel@example.com",
   "password": "senha123"
 }
