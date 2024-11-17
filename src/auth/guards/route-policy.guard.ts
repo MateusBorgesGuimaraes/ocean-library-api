@@ -14,11 +14,11 @@ export class RoutePolicyGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const routePolicyRequired = this.reflector.get<RoutePolicies | undefined>(
-      ROUTE_POLICY_KEY,
-      context.getHandler(),
-    );
-    if (!routePolicyRequired) {
+    const routePoliciesRequired = this.reflector.get<
+      RoutePolicies[] | undefined
+    >(ROUTE_POLICY_KEY, context.getHandler());
+
+    if (!routePoliciesRequired || routePoliciesRequired.length === 0) {
       return true;
     }
 
@@ -27,15 +27,19 @@ export class RoutePolicyGuard implements CanActivate {
 
     if (!tokenPayload) {
       throw new UnauthorizedException(
-        `Rout need permission ${routePolicyRequired}.`,
+        `Route requires one of these permissions: ${routePoliciesRequired.join(', ')}.`,
       );
     }
 
     const { user }: { user: User } = tokenPayload;
 
-    if (!user.permitions.includes(routePolicyRequired)) {
+    const hasRequiredPermission = routePoliciesRequired.some((policy) =>
+      user.permitions.includes(policy),
+    );
+
+    if (!hasRequiredPermission) {
       throw new UnauthorizedException(
-        `Rout need permission ${routePolicyRequired}.`,
+        `Route requires one of these permissions: ${routePoliciesRequired.join(', ')}.`,
       );
     }
 

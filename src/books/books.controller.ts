@@ -14,6 +14,9 @@ import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { SearchBookDto } from './dto/search-book.dto';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
+import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 
 @Controller('books')
 export class BooksController {
@@ -21,6 +24,8 @@ export class BooksController {
 
   @Post()
   @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
+  @UseGuards(AuthAndPolicyGuard)
   create(@Body() createBookDto: CreateBookDto) {
     return this.booksService.create(createBookDto);
   }
@@ -36,13 +41,15 @@ export class BooksController {
   }
 
   @Patch(':id')
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
+  @UseGuards(AuthAndPolicyGuard)
   update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.booksService.update(+id, updateBookDto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
+  @UseGuards(AuthAndPolicyGuard)
   remove(@Param('id') id: string) {
     return this.booksService.remove(+id);
   }

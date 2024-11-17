@@ -16,13 +16,17 @@ import { RegisterEventDto } from './dto/register-event.dto';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import { TokenPayloadParam } from 'src/auth/params/token-payload.param';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
+import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 
 @Controller('library-events')
 export class LibraryEventsController {
   constructor(private readonly libraryEventsService: LibraryEventsService) {}
 
   @Post()
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.socialMedia, RoutePolicies.admin)
+  @UseGuards(AuthAndPolicyGuard)
   create(@Body() createLibraryEventDto: CreateLibraryEventDto) {
     return this.libraryEventsService.create(createLibraryEventDto);
   }
@@ -52,13 +56,24 @@ export class LibraryEventsController {
   }
 
   @Get(':id/registrations')
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(
+    RoutePolicies.librarian,
+    RoutePolicies.admin,
+    RoutePolicies.socialMedia,
+  )
+  @UseGuards(AuthAndPolicyGuard)
   getEventRegistrations(@Param('id') id: string) {
     return this.libraryEventsService.getEventRegistrations(+id);
   }
 
   @Get('user/:userId/events')
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(
+    RoutePolicies.librarian,
+    RoutePolicies.admin,
+    RoutePolicies.user,
+    RoutePolicies.socialMedia,
+  )
+  @UseGuards(AuthAndPolicyGuard)
   async getUserEvents(
     @Param('userId', ParseIntPipe) userId: number,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
@@ -67,7 +82,8 @@ export class LibraryEventsController {
   }
 
   @Patch(':id')
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.socialMedia)
+  @UseGuards(AuthAndPolicyGuard)
   update(
     @Param('id') id: string,
     @Body() updateLibraryEventDto: UpdateLibraryEventDto,
@@ -76,13 +92,15 @@ export class LibraryEventsController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.socialMedia)
+  @UseGuards(AuthAndPolicyGuard)
   remove(@Param('id') id: string) {
     return this.libraryEventsService.remove(+id);
   }
 
   @Delete(':eventId/registrations/:userId')
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.user)
+  @UseGuards(AuthAndPolicyGuard)
   cancelRegistration(
     @Param('eventId') eventId: string,
     @Param('userId') userId: string,

@@ -20,8 +20,8 @@ POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "name": "hallibel",
-  "email": "hallibel@example.com",
+  "name": "admin",
+  "email": "admin@example.com",
   "password": "senha123"
 }
 
@@ -214,8 +214,8 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "userId": 12,
-  "bookId": 7
+  "userId": 14,
+  "bookId": 3
 }
 
 ### Pega o loan por id
@@ -260,6 +260,6 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "hallibel@example.com",
+  "email": "admin@example.com",
   "password": "senha123"
 }

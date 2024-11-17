@@ -17,13 +17,19 @@ import { LoanStatus } from './entities/loan.entity';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import { TokenPayloadParam } from 'src/auth/params/token-payload.param';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
+import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 
-@UseGuards(AuthTokenGuard)
+// fazer um jeito de acessar as permissions nos services
+
 @Controller('loans')
 export class LoansController {
   constructor(private readonly loansService: LoansService) {}
 
   @Get('statistics')
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
+  @UseGuards(AuthAndPolicyGuard)
   async getLoanStatistics() {
     console.log('Accessing statistics endpoint');
     try {
@@ -37,6 +43,7 @@ export class LoansController {
   }
 
   @Post()
+  @UseGuards(AuthTokenGuard)
   async createLoan(
     @Body() createLoanDto: CreateLoanDto,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
@@ -45,6 +52,8 @@ export class LoansController {
   }
 
   @Get('findAll')
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
+  @UseGuards(AuthAndPolicyGuard)
   async getAllLoans(
     @Query('status') status?: LoanStatus,
     @Query('page') pageParam?: string,
@@ -61,6 +70,12 @@ export class LoansController {
   }
 
   @Get(':id')
+  @SetRoutePolicy(
+    RoutePolicies.admin,
+    RoutePolicies.librarian,
+    RoutePolicies.user,
+  )
+  @UseGuards(AuthAndPolicyGuard)
   async getLoanById(@Param('id', ParseIntPipe) id: number) {
     const loan = await this.loansService.getLoanById(id);
     if (!loan) {
@@ -70,6 +85,7 @@ export class LoansController {
   }
 
   @Put(':id/pickup')
+  @UseGuards(AuthTokenGuard)
   async pickupBook(
     @Param('id', ParseIntPipe) id: number,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
@@ -79,6 +95,7 @@ export class LoansController {
   }
 
   @Put(':id/renew')
+  @UseGuards(AuthTokenGuard)
   async renewLoan(
     @Param('id', ParseIntPipe) id: number,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
@@ -87,6 +104,7 @@ export class LoansController {
   }
 
   @Put(':id/return')
+  @UseGuards(AuthTokenGuard)
   async returnBook(
     @Param('id', ParseIntPipe) id: number,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
@@ -95,6 +113,12 @@ export class LoansController {
   }
 
   @Get('user/:userId')
+  @SetRoutePolicy(
+    RoutePolicies.admin,
+    RoutePolicies.librarian,
+    RoutePolicies.user,
+  )
+  @UseGuards(AuthAndPolicyGuard)
   async getUserLoans(
     @Param('userId', ParseIntPipe) userId: number,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
@@ -114,6 +138,8 @@ export class LoansController {
   }
 
   @Get('status/overdue')
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
+  @UseGuards(AuthAndPolicyGuard)
   async getOverdueLoans(
     @Query('page', ParseIntPipe) page: number = 1,
     @Query('limit', ParseIntPipe) limit: number = 10,
@@ -122,6 +148,8 @@ export class LoansController {
   }
 
   @Get('directly/:bookId/:userId')
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
+  @UseGuards(AuthAndPolicyGuard)
   async getBookdirectly(
     @Param('bookId', ParseIntPipe) bookId: number,
     @Param('userId', ParseIntPipe) userId: number,

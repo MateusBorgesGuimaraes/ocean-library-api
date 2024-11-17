@@ -11,14 +11,17 @@ import {
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
-import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
+import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
+import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
 
 @Controller('news')
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
   @Post()
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.socialMedia)
+  @UseGuards(AuthAndPolicyGuard)
   create(@Body() createNewsDto: CreateNewsDto) {
     return this.newsService.create(createNewsDto);
   }
@@ -34,13 +37,15 @@ export class NewsController {
   }
 
   @Patch(':id')
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.socialMedia)
+  @UseGuards(AuthAndPolicyGuard)
   update(@Param('id') id: string, @Body() updateNewsDto: UpdateNewsDto) {
     return this.newsService.update(+id, updateNewsDto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.socialMedia)
+  @UseGuards(AuthAndPolicyGuard)
   remove(@Param('id') id: string) {
     return this.newsService.remove(+id);
   }

@@ -9,14 +9,17 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
+import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
+import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
+  @UseGuards(AuthAndPolicyGuard)
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
@@ -32,7 +35,8 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
+  @UseGuards(AuthAndPolicyGuard)
   remove(@Param('id') id: string) {
     return this.categoryService.remove(+id);
   }
