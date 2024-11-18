@@ -365,7 +365,7 @@ export class LoansService {
     };
   }
 
-  private async getAverageLoanDuration() {
+  async getAverageLoanDuration() {
     console.log('passou bo getAverageLoanDuration');
     const completedLoans = await this.loanRepository.find({
       where: { status: LoanStatus.RETURNED },
@@ -380,5 +380,31 @@ export class LoansService {
     }, 0);
 
     return totalDuration / completedLoans.length / (1000 * 60 * 60 * 24);
+  }
+
+  async getUserLoansByEmail(email: string, tokenPayload: TokenPayloadDto) {
+    const data = await this.userRepository.findOne({
+      where: { email },
+      relations: ['loans'],
+    });
+
+    if (!data) {
+      throw new NotFoundException('User not found');
+    }
+
+    const applicantPermissions = await this.userRepository.findOne({
+      where: { id: tokenPayload.sub },
+      select: ['id', 'permitions'],
+    });
+
+    if (
+      data.id !== tokenPayload.sub &&
+      !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
+      !applicantPermissions.permitions.includes(RoutePolicies.librarian)
+    ) {
+      throw new ForbiddenException('You are not the owner of this loan');
+    }
+
+    return data;
   }
 }

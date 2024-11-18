@@ -150,6 +150,19 @@ export class LoansController {
     return this.loansService.getOverdueLoans(page, limit);
   }
 
+  @Get('search/email')
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
+  @UseGuards(AuthAndPolicyGuard)
+  async getUserLoanByEmail(
+    @Query('email') email: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    if (!email) {
+      throw new NotFoundException('Email parameter is required');
+    }
+    return this.loansService.getUserLoansByEmail(email, tokenPayload);
+  }
+
   @Get('directly/:bookId/:userId')
   @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
   @UseGuards(AuthAndPolicyGuard)

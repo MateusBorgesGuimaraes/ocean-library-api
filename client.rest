@@ -238,8 +238,12 @@ Authorization: Bearer {{authToken}}
 PUT {{baseUrl}}/loans/5/return
 Authorization: Bearer {{authToken}}
 
-### Pega todos os emprestimos do usuario
+### Pega todos os emprestimos do usuario 
 GET {{baseUrl}}/loans/user/12?status=picked_up
+Authorization: Bearer {{authToken}}
+
+### Pega todos os emprestimos do usuario por email
+GET {{baseUrl}}/loans/search/email?email=ruby@example.com
 Authorization: Bearer {{authToken}}
 
 ### Pega as estatisticas dos esmprestimos
