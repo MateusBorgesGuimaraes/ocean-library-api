@@ -13,6 +13,7 @@ import { LibraryEventRegistration } from './entities/library-event-registrations
 import { User } from 'src/users/entities/user.entity';
 import { RegisterEventDto } from './dto/register-event.dto';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 
 @Injectable()
 export class LibraryEventsService {
@@ -129,9 +130,20 @@ export class LibraryEventsService {
     userId: number,
     tokenPayload: TokenPayloadDto,
   ) {
-    if (userId !== tokenPayload.sub) {
-      throw new ForbiddenException('You are not the owner of this user');
+    const applicantPermissions = await this.userRepository.findOne({
+      where: { id: tokenPayload.sub },
+      select: ['id', 'permitions'],
+    });
+
+    if (
+      userId !== tokenPayload.sub &&
+      !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
+      !applicantPermissions.permitions.includes(RoutePolicies.librarian) &&
+      !applicantPermissions.permitions.includes(RoutePolicies.socialMedia)
+    ) {
+      throw new ForbiddenException('You are not the owner of this loan');
     }
+
     const registration = await this.registrationRepository.findOne({
       where: {
         event: { id: eventId },
@@ -150,7 +162,6 @@ export class LibraryEventsService {
       );
     }
 
-    // Simply remove the registration
     await this.registrationRepository.remove(registration);
 
     return {
@@ -177,9 +188,20 @@ export class LibraryEventsService {
   }
 
   async getUserEvents(userId: number, tokenPayload: TokenPayloadDto) {
-    if (userId !== tokenPayload.sub) {
-      throw new ForbiddenException('You are not the owner of this user');
+    const applicantPermissions = await this.userRepository.findOne({
+      where: { id: tokenPayload.sub },
+      select: ['id', 'permitions'],
+    });
+
+    if (
+      userId !== tokenPayload.sub &&
+      !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
+      !applicantPermissions.permitions.includes(RoutePolicies.librarian) &&
+      !applicantPermissions.permitions.includes(RoutePolicies.socialMedia)
+    ) {
+      throw new ForbiddenException('You are not the owner of this loan');
     }
+
     const registrations = await this.registrationRepository.find({
       where: {
         user: { id: userId },

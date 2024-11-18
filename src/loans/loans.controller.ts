@@ -76,8 +76,11 @@ export class LoansController {
     RoutePolicies.user,
   )
   @UseGuards(AuthAndPolicyGuard)
-  async getLoanById(@Param('id', ParseIntPipe) id: number) {
-    const loan = await this.loansService.getLoanById(id);
+  async getLoanById(
+    @Param('id', ParseIntPipe) id: number,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    const loan = await this.loansService.getLoanById(id, tokenPayload);
     if (!loan) {
       throw new NotFoundException('Loan not found');
     }

@@ -11,6 +11,7 @@ import { Book } from 'src/books/entities/book.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 
 @Injectable()
 export class LoansService {
@@ -42,6 +43,23 @@ export class LoansService {
     const user = await this.userRepository.findOne({
       where: { id: createLoanDto.userId },
     });
+
+    // const applicantPermissions = await this.userRepository.findOne({
+    //   where: { id: tokenPayload.sub },
+    //   select: ['id', 'permitions'],
+    // });
+
+    // if (!user || !applicantPermissions) {
+    //   throw new NotFoundException('User not found');
+    // }
+
+    // if (
+    //   user.id !== tokenPayload.sub &&
+    //   !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
+    //   !applicantPermissions.permitions.includes(RoutePolicies.librarian)
+    // ) {
+    //   throw new ForbiddenException('Cannot create loan for another user');
+    // }
 
     if (!user) {
       throw new NotFoundException('User not found');
@@ -111,14 +129,10 @@ export class LoansService {
     loanId: number,
     tokenPayload: TokenPayloadDto,
   ): Promise<Loan> {
-    const loan = await this.getLoanById(loanId);
+    const loan = await this.getLoanById(loanId, tokenPayload);
 
     if (!loan) {
       throw new NotFoundException('Loan not found');
-    }
-
-    if (loan.user.id !== tokenPayload.sub) {
-      throw new ForbiddenException('You are not the owner of this loan');
     }
 
     if (loan.status !== LoanStatus.PENDING) {
@@ -135,15 +149,24 @@ export class LoansService {
     loanId: number,
     tokenPayload: TokenPayloadDto,
   ): Promise<Loan> {
-    const loan = await this.getLoanById(loanId);
+    const loan = await this.getLoanById(loanId, tokenPayload);
 
     if (!loan) {
       throw new NotFoundException('Loan not found');
     }
 
-    if (loan.user.id !== tokenPayload.sub) {
-      throw new ForbiddenException('You are not the owner of this loan');
-    }
+    // const applicantPermissions = await this.userRepository.findOne({
+    //   where: { id: tokenPayload.sub },
+    //   select: ['id', 'permitions'],
+    // });
+
+    // if (
+    //   loan.user.id !== tokenPayload.sub &&
+    //   !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
+    //   !applicantPermissions.permitions.includes(RoutePolicies.librarian)
+    // ) {
+    //   throw new ForbiddenException('You are not the owner of this loan');
+    // }
 
     if (loan.status !== LoanStatus.PICKED_UP) {
       throw new BadRequestException('Can only renew active loans');
@@ -164,7 +187,7 @@ export class LoansService {
     loanId: number,
     tokenPayload: TokenPayloadDto,
   ): Promise<Loan> {
-    const loan = await this.getLoanById(loanId);
+    const loan = await this.getLoanById(loanId, tokenPayload);
 
     if (!loan) {
       throw new NotFoundException('Loan not found');
@@ -172,10 +195,6 @@ export class LoansService {
 
     if (loan.status == LoanStatus.RETURNED) {
       throw new BadRequestException('Book already has benn returned');
-    }
-
-    if (loan.user.id !== tokenPayload.sub) {
-      throw new ForbiddenException('You are not the owner of this loan');
     }
 
     loan.status = LoanStatus.RETURNED;
@@ -211,7 +230,16 @@ export class LoansService {
     page: number = 1,
     limit: number = 10,
   ) {
-    if (userId !== tokenPayload.sub) {
+    const applicantPermissions = await this.userRepository.findOne({
+      where: { id: tokenPayload.sub },
+      select: ['id', 'permitions'],
+    });
+
+    if (
+      userId !== tokenPayload.sub &&
+      !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
+      !applicantPermissions.permitions.includes(RoutePolicies.librarian)
+    ) {
       throw new ForbiddenException('You are not the owner of this loan');
     }
 
@@ -267,11 +295,24 @@ export class LoansService {
     };
   }
 
-  async getLoanById(id: number) {
+  async getLoanById(id: number, tokenPayload: TokenPayloadDto) {
     const loan = await this.loanRepository.findOne({
       where: { id },
       relations: ['book', 'user'],
     });
+
+    const applicantPermissions = await this.userRepository.findOne({
+      where: { id: tokenPayload.sub },
+      select: ['id', 'permitions'],
+    });
+
+    if (
+      loan.user.id !== tokenPayload.sub &&
+      !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
+      !applicantPermissions.permitions.includes(RoutePolicies.librarian)
+    ) {
+      throw new ForbiddenException('You are not the owner of this loan');
+    }
 
     if (!loan) {
       throw new NotFoundException('Loan not found');
