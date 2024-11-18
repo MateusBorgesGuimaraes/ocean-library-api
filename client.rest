@@ -61,6 +61,15 @@ Content-Type: application/json
 DELETE {{baseUrl}}/news/8
 Authorization: Bearer {{authToken}}
 
+### Pesquisa as noticias pelo titulo
+GET {{baseUrl}}/news/search/title?title=Trump
+Authorization: Bearer {{authToken}}
+
+
+
+
+
+
 
 # CATEGORY
 
@@ -180,6 +189,10 @@ Authorization: Bearer {{authToken}}
 
 ### Cancela o registro
 DELETE {{baseUrl}}/library-events/3/registrations/12
+Authorization: Bearer {{authToken}}
+
+### Pesquisa os evento pelo titulo
+GET {{baseUrl}}/library-events/search/title?title=Author
 Authorization: Bearer {{authToken}}
 
 

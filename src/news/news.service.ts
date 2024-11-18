@@ -3,7 +3,7 @@ import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { News } from './entities/news.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class NewsService {
@@ -20,6 +20,33 @@ export class NewsService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async getNewsByTitle(title: string) {
+    const news = await this.newsRepository.find({
+      where: {
+        title: ILike(`%${title}%`),
+      },
+      select: [
+        'id',
+        'title',
+        'content',
+        'tags',
+        'createdAt',
+        'updatedAt',
+        'isActive',
+        'coverImage',
+      ],
+      order: {
+        title: 'ASC',
+      },
+      take: 10,
+    });
+
+    if (!news) {
+      throw new NotFoundException('News not found');
+    }
+    return news;
   }
 
   async findAll() {

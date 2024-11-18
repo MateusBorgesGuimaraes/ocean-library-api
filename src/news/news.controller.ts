@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
@@ -34,6 +35,13 @@ export class NewsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.newsService.findOne(+id);
+  }
+
+  @Get('search/title')
+  @SetRoutePolicy(RoutePolicies.socialMedia, RoutePolicies.admin)
+  @UseGuards(AuthAndPolicyGuard)
+  async getEventByTitle(@Query('title') title: string) {
+    return this.newsService.getNewsByTitle(title);
   }
 
   @Patch(':id')

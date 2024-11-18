@@ -7,7 +7,7 @@ import {
 import { CreateLibraryEventDto } from './dto/create-library-event.dto';
 import { UpdateLibraryEventDto } from './dto/update-library-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { LibraryEvent } from './entities/library-event.entity';
 import { LibraryEventRegistration } from './entities/library-event-registrations.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -276,5 +276,23 @@ export class LibraryEventsService {
       throw new NotFoundException('LibraryEvent not found');
     }
     return this.libraryEventsRepository.remove(libraryEvent);
+  }
+
+  async getEventByTitle(title: string) {
+    const libraryEvent = await this.libraryEventsRepository.find({
+      where: {
+        title: ILike(`%${title}%`),
+      },
+      relations: ['registrations', 'registrations.user'],
+      order: {
+        title: 'ASC',
+      },
+      take: 10,
+    });
+
+    if (!libraryEvent) {
+      throw new NotFoundException('LibraryEvent not found');
+    }
+    return libraryEvent;
   }
 }

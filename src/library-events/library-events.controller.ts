@@ -8,6 +8,7 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { LibraryEventsService } from './library-events.service';
 import { CreateLibraryEventDto } from './dto/create-library-event.dto';
@@ -64,6 +65,13 @@ export class LibraryEventsController {
   @UseGuards(AuthAndPolicyGuard)
   getEventRegistrations(@Param('id') id: string) {
     return this.libraryEventsService.getEventRegistrations(+id);
+  }
+
+  @Get('search/title')
+  @SetRoutePolicy(RoutePolicies.socialMedia, RoutePolicies.admin)
+  @UseGuards(AuthAndPolicyGuard)
+  async getEventByTitle(@Query('title') title: string) {
+    return this.libraryEventsService.getEventByTitle(title);
   }
 
   @Get('user/:userId/events')
