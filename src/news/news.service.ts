@@ -49,14 +49,25 @@ export class NewsService {
     return news;
   }
 
-  async findAll() {
-    const news = await this.newsRepository.find({
+  async findAll(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+
+    console.log('skip', skip);
+
+    const [news, total] = await this.newsRepository.findAndCount({
       order: {
-        id: 'desc',
+        id: 'DESC',
       },
+      skip,
+      take: limit,
     });
 
-    return news;
+    return {
+      data: news,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   findOne(id: number) {

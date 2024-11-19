@@ -21,8 +21,6 @@ import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
 import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 
-// fazer um jeito de acessar as permissions nos services
-
 @Controller('loans')
 export class LoansController {
   constructor(private readonly loansService: LoansService) {}

@@ -6,6 +6,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  Patch,
+  // HttpCode,
+  // HttpStatus,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -25,6 +28,8 @@ export class CategoryController {
   }
 
   @Get()
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
+  @UseGuards(AuthAndPolicyGuard)
   findAll() {
     return this.categoryService.findAll();
   }
@@ -34,7 +39,19 @@ export class CategoryController {
     return this.categoryService.findOne(+id);
   }
 
+  @Patch(':id')
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
+  @UseGuards(AuthAndPolicyGuard)
+  update(
+    @Param('id') id: string,
+    @Body() updateCategoryDto: CreateCategoryDto,
+  ) {
+    return this.categoryService.update(+id, updateCategoryDto);
+  }
+
+  // ta retronando estranho
   @Delete(':id')
+  // @HttpCode(HttpStatus.NO_CONTENT)
   @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
   @UseGuards(AuthAndPolicyGuard)
   remove(@Param('id') id: string) {

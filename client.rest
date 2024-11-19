@@ -5,7 +5,7 @@
 
 ### Exibe todos os usuarios
 GET {{baseUrl}}/users
-Authorization: Bearer {{authToken}}
+Authorization: Bearer {{authToken}} 
 
 ### Exibe um usuario pelo id
 GET {{baseUrl}}/users/11
@@ -20,18 +20,18 @@ POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "name": "admin",
-  "email": "admin@example.com",
+  "name": "rukia",
+  "email": "rukia@example.com",
   "password": "senha123"
 }
 
 # NEWS
 
 ### Exibe todas as noticias
-GET {{baseUrl}}/news
+GET {{baseUrl}}/news?page=1&limit=1
 
 ### Exibe uma noticia pelo id
-GET {{baseUrl}}/news/6
+GET {{baseUrl}}/news/9
 
 ### Cria uma noticia
 POST {{baseUrl}}/news
@@ -39,33 +39,31 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "Melhores mangas da atualidadefdsfsdf",
-  "content": "Com a cultura japonesa de ler mangas cada vez maisfdsf presente no mundo, separamos entao um compilado dos melhores ...",
-  "tags": ["japao", "manga", "recomendacao"],
+  "title": "Local Community Event Highlights hbgfj",
+  "content": "Recap of the annual community festival, showcasing local talents and cultural diversity.",
+  "tags": ["community", "local-events", "culture"],
   "isActive": true
 }
 
 ### Atualiza uma noticia
-PATCH  {{baseUrl}}/news/7
+PATCH  {{baseUrl}}/news/9
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
- "title": "Melhores mangas da atualidade",
-  "content": "Com a cultura japonesa de ler mangas cada vez mais presente no mundo, separamos entao um compilado dos melhores ...",
-  "tags": ["japao", "manga", "recomendacao"],
+  "title": "Local Community Event Highlights edit",
+  "content": "Recap of the annual community festival, showcasing local talents and cultural diversity.",
+  "tags": ["community", "local-events", "culture"],
   "isActive": true
 }
 
 ### Deleta uma noticia
-DELETE {{baseUrl}}/news/8
+DELETE {{baseUrl}}/news/10
 Authorization: Bearer {{authToken}}
 
 ### Pesquisa as noticias pelo titulo
-GET {{baseUrl}}/news/search/title?title=Trump
+GET {{baseUrl}}/news/search/title?title=Local
 Authorization: Bearer {{authToken}}
-
-
 
 
 
@@ -75,9 +73,10 @@ Authorization: Bearer {{authToken}}
 
 ### Exibe todas as categorias
 GET {{baseUrl}}/category
+Authorization: Bearer {{authToken}}
 
 ### Exibe uma categoria pelo id
-GET {{baseUrl}}/category/9
+GET {{baseUrl}}/category/12
 
 ### Cria uma categoria
 POST {{baseUrl}}/category
@@ -85,11 +84,20 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "name": "filosofia"
+  "name": "scfdsfifdhdfsf-fi"
+}
+
+### Atualiza uma categoria
+PATCH {{baseUrl}}/category/15
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "sci-fi"
 }
 
 ### Deleta uma categoria
-DELETE {{baseUrl}}/category/10
+DELETE {{baseUrl}}/category/19
 Authorization: Bearer {{authToken}}
 
 
@@ -277,6 +285,6 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@example.com",
+  "email": "stock@example.com",
   "password": "senha123"
 }

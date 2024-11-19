@@ -30,12 +30,21 @@ export class CategoryService {
     return category;
   }
 
-  findOne(id: number) {
-    const category = this.categoryRepository.findOneBy({ id });
-    console.log(category);
+  async findOne(id: number) {
+    const category = await this.categoryRepository.findOneBy({ id });
     if (category) return category;
 
     throw new NotFoundException('Category not found');
+  }
+
+  async update(id: number, updateCategoryDto: CreateCategoryDto) {
+    const category = await this.findOne(id);
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+    Object.assign(category, updateCategoryDto);
+
+    return this.categoryRepository.save(category);
   }
 
   async remove(id: number) {

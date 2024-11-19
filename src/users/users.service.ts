@@ -32,7 +32,11 @@ export class UsersService {
 
       const newUser = this.userRepository.create(userData);
       await this.userRepository.save(newUser);
-      return newUser;
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { passwordHash: _, ...result } = newUser;
+
+      return result;
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('Usuario ja existe');
@@ -48,17 +52,30 @@ export class UsersService {
       },
     });
 
-    return users;
+    if (users.length === 0) {
+      throw new NotFoundException('Users not found');
+    }
+
+    const usersWithoutPassword = users.map((user) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { passwordHash, ...result } = user;
+      return result;
+    });
+
+    return usersWithoutPassword;
   }
 
-  findOne(id: number) {
-    const user = this.userRepository.findOneBy({ id });
+  async findOne(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
 
-    return user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordHash, ...result } = user;
+
+    return result;
   }
 
   async findByEmail(email: string) {
