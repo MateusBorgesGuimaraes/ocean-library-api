@@ -118,7 +118,8 @@ export class LibraryEventsService {
       registrations: event.registrations.map((reg) => ({
         id: reg.id,
         userId: reg.user.id,
-        userName: reg.user.name,
+        username: reg.user.name,
+        email: reg.user.email,
         registeredAt: reg.registeredAt,
         attended: reg.attended,
       })),
@@ -290,9 +291,22 @@ export class LibraryEventsService {
       take: 10,
     });
 
-    if (!libraryEvent) {
+    if (!libraryEvent || libraryEvent.length === 0) {
       throw new NotFoundException('LibraryEvent not found');
     }
-    return libraryEvent;
+
+    return libraryEvent.map((event) => ({
+      ...event,
+      registrations: event.registrations.map((registration) => ({
+        id: registration.id,
+        attended: registration.attended,
+        registeredAt: registration.registeredAt,
+        user: {
+          id: registration.user.id,
+          name: registration.user.name,
+          email: registration.user.email,
+        },
+      })),
+    }));
   }
 }

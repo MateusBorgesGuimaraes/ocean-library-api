@@ -104,7 +104,7 @@ Authorization: Bearer {{authToken}}
 # BOOK
 
 ### Exibe um livro pelo id
-GET {{baseUrl}}/books/9
+GET {{baseUrl}}/books/7
 
 ### Cria um livro
 POST {{baseUrl}}/books
@@ -112,35 +112,32 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "The Art of War",
+  "title": "The Art of War for test",
   "author": "Sun Tzu",
   "publisher": "Simon & Schuster",
   "year": -500,
   "isbn": "978-1590302255",
   "synopsis": "An ancient Chinese military treatise that provides guidance on military strategy and tactics, which has influenced both military and business thinking.",
   "availability": true,
-  "quantity": 6,
+  "quantity": 12,
   "category": 13
 }
 
 ### Atualiza um livro
-PATCH  {{baseUrl}}/books/5
+PATCH  {{baseUrl}}/books/8
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "The Hobbit"
+  "title": "The Art of War for test att"
 }
 
 ### Deleta um livro
-DELETE {{baseUrl}}/books/6
+DELETE {{baseUrl}}/books/8
 Authorization: Bearer {{authToken}}
 
 ### Pesquisar um livro
 GET {{baseUrl}}/books/search
-
-
-
 
 
 # EVENTS
@@ -149,7 +146,7 @@ GET {{baseUrl}}/books/search
 GET {{baseUrl}}/library-events
 
 ### Exibe um evento pelo id
-GET {{baseUrl}}/library-events/3
+GET {{baseUrl}}/library-events/8
 
 ### Cria um evento
 POST {{baseUrl}}/library-events
@@ -157,7 +154,7 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "fsdfsf",
+  "title": "fsdfsf hghf",
   "description": "Test event with empty title",
   "date": "2024-07-15T14:00:00Z",
   "location": "Main Library",
@@ -166,7 +163,7 @@ Content-Type: application/json
 }
 
 ### Atualiza um evento
-PATCH  {{baseUrl}}/library-events/3
+PATCH  {{baseUrl}}/library-events/8
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
@@ -175,11 +172,11 @@ Content-Type: application/json
 }
 
 ### Deleta um evento
-DELETE {{baseUrl}}/library-events/7
+DELETE {{baseUrl}}/library-events/8
 Authorization: Bearer {{authToken}}
 
 ### Registra um usuario para um evento
-POST {{baseUrl}}/library-events/5/register
+POST {{baseUrl}}/library-events/3/register
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
@@ -200,7 +197,7 @@ DELETE {{baseUrl}}/library-events/3/registrations/12
 Authorization: Bearer {{authToken}}
 
 ### Pesquisa os evento pelo titulo
-GET {{baseUrl}}/library-events/search/title?title=Author
+GET {{baseUrl}}/library-events/search/title?title=Digital
 Authorization: Bearer {{authToken}}
 
 
@@ -212,18 +209,19 @@ Authorization: Bearer {{authToken}}
 
 ### Cria um request
 POST {{baseUrl}}/requests
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "The Great Gatsby",
-  "author": "F. Scott Fitzgerald",
-  "publisher": "Scribner",
+  "title": "The Great Gatsby2",
+  "author": "F. Scott Fitzgerald2",
+  "publisher": "Scribner2",
   "year": 1925,
-  "genre": "Classic Fiction"
+  "genre": "Classic Fiction2"
 }
 
 ### Deleta um request
-DELETE {{baseUrl}}/requests/6
+DELETE {{baseUrl}}/requests/4
 Authorization: Bearer {{authToken}}
 
 
@@ -285,6 +283,6 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "stock@example.com",
+  "email": "admin@example.com",
   "password": "senha123"
 }
