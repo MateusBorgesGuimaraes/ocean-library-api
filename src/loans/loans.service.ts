@@ -44,23 +44,6 @@ export class LoansService {
       where: { id: createLoanDto.userId },
     });
 
-    // const applicantPermissions = await this.userRepository.findOne({
-    //   where: { id: tokenPayload.sub },
-    //   select: ['id', 'permitions'],
-    // });
-
-    // if (!user || !applicantPermissions) {
-    //   throw new NotFoundException('User not found');
-    // }
-
-    // if (
-    //   user.id !== tokenPayload.sub &&
-    //   !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
-    //   !applicantPermissions.permitions.includes(RoutePolicies.librarian)
-    // ) {
-    //   throw new ForbiddenException('Cannot create loan for another user');
-    // }
-
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -94,7 +77,29 @@ export class LoansService {
     book.availability = book.quantity > 0;
     await this.bookRepository.save(book);
 
-    return this.loanRepository.save(loan);
+    const loadData = await this.loanRepository.save(loan);
+
+    const cleanLoan = {
+      id: loadData.id,
+      status: loadData.status,
+      requestDate: loadData.requestDate,
+      dueDate: loadData.dueDate,
+      book: {
+        id: loadData.book.id,
+        title: loadData.book.title,
+        author: loadData.book.author,
+      },
+      user: {
+        id: loadData.user.id,
+        name: loadData.user.name,
+        email: loadData.user.email,
+      },
+      renewalCount: loadData.renewalCount,
+      pickupDate: loadData.pickupDate,
+      returnDate: loadData.returnDate,
+    };
+
+    return cleanLoan as Loan;
   }
 
   async getBookdirectly(bookId: number, userId: number): Promise<Loan> {
@@ -122,7 +127,29 @@ export class LoansService {
       dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
-    return this.loanRepository.save(loan);
+    const loadData = await this.loanRepository.save(loan);
+
+    const cleanLoan = {
+      id: loadData.id,
+      status: loadData.status,
+      requestDate: loadData.requestDate,
+      dueDate: loadData.dueDate,
+      book: {
+        id: loadData.book.id,
+        title: loadData.book.title,
+        author: loadData.book.author,
+      },
+      user: {
+        id: loadData.user.id,
+        name: loadData.user.name,
+        email: loadData.user.email,
+      },
+      renewalCount: loadData.renewalCount,
+      pickupDate: loadData.pickupDate,
+      returnDate: loadData.returnDate,
+    };
+
+    return cleanLoan as Loan;
   }
 
   async pickupBook(
@@ -142,7 +169,29 @@ export class LoansService {
     loan.status = LoanStatus.PICKED_UP;
     loan.pickupDate = new Date();
 
-    return this.loanRepository.save(loan);
+    const pickUpLoan = await this.loanRepository.save(loan);
+
+    const cleanLoan = {
+      id: pickUpLoan.id,
+      status: pickUpLoan.status,
+      requestDate: pickUpLoan.requestDate,
+      dueDate: pickUpLoan.dueDate,
+      book: {
+        id: pickUpLoan.book.id,
+        title: pickUpLoan.book.title,
+        author: pickUpLoan.book.author,
+      },
+      user: {
+        id: pickUpLoan.user.id,
+        name: pickUpLoan.user.name,
+        email: pickUpLoan.user.email,
+      },
+      renewalCount: pickUpLoan.renewalCount,
+      pickupDate: pickUpLoan.pickupDate,
+      returnDate: pickUpLoan.returnDate,
+    };
+
+    return cleanLoan as Loan;
   }
 
   async renewLoan(
@@ -154,19 +203,6 @@ export class LoansService {
     if (!loan) {
       throw new NotFoundException('Loan not found');
     }
-
-    // const applicantPermissions = await this.userRepository.findOne({
-    //   where: { id: tokenPayload.sub },
-    //   select: ['id', 'permitions'],
-    // });
-
-    // if (
-    //   loan.user.id !== tokenPayload.sub &&
-    //   !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
-    //   !applicantPermissions.permitions.includes(RoutePolicies.librarian)
-    // ) {
-    //   throw new ForbiddenException('You are not the owner of this loan');
-    // }
 
     if (loan.status !== LoanStatus.PICKED_UP) {
       throw new BadRequestException('Can only renew active loans');
@@ -180,7 +216,29 @@ export class LoansService {
     loan.status = LoanStatus.RENEWED;
     loan.dueDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
 
-    return this.loanRepository.save(loan);
+    const renewLoan = await this.loanRepository.save(loan);
+
+    const cleanLoan = {
+      id: renewLoan.id,
+      status: renewLoan.status,
+      requestDate: renewLoan.requestDate,
+      dueDate: renewLoan.dueDate,
+      book: {
+        id: renewLoan.book.id,
+        title: renewLoan.book.title,
+        author: renewLoan.book.author,
+      },
+      user: {
+        id: renewLoan.user.id,
+        name: renewLoan.user.name,
+        email: renewLoan.user.email,
+      },
+      renewalCount: renewLoan.renewalCount,
+      pickupDate: renewLoan.pickupDate,
+      returnDate: renewLoan.returnDate,
+    };
+
+    return cleanLoan as Loan;
   }
 
   async returnBook(
@@ -206,7 +264,29 @@ export class LoansService {
 
     await this.bookRepository.save(book);
 
-    return this.loanRepository.save(loan);
+    const returnLoan = await this.loanRepository.save(loan);
+
+    const cleanLoan = {
+      id: returnLoan.id,
+      status: returnLoan.status,
+      requestDate: returnLoan.requestDate,
+      dueDate: returnLoan.dueDate,
+      book: {
+        id: returnLoan.book.id,
+        title: returnLoan.book.title,
+        author: returnLoan.book.author,
+      },
+      user: {
+        id: returnLoan.user.id,
+        name: returnLoan.user.name,
+        email: returnLoan.user.email,
+      },
+      renewalCount: returnLoan.renewalCount,
+      pickupDate: returnLoan.pickupDate,
+      returnDate: returnLoan.returnDate,
+    };
+
+    return cleanLoan as Loan;
   }
 
   async checkOverdueBooks() {
@@ -258,8 +338,34 @@ export class LoansService {
       .take(limit)
       .getManyAndCount();
 
+    if (loans.length === 0) {
+      throw new NotFoundException('No loans found for this user');
+    }
+
+    const cleanLoans = loans.map((loan) => {
+      return {
+        id: loan.id,
+        status: loan.status,
+        requestDate: loan.requestDate,
+        dueDate: loan.dueDate,
+        book: {
+          id: loan.book.id,
+          title: loan.book.title,
+          author: loan.book.author,
+        },
+        user: {
+          id: loan.user.id,
+          name: loan.user.name,
+          email: loan.user.email,
+        },
+        renewalCount: loan.renewalCount,
+        pickupDate: loan.pickupDate,
+        returnDate: loan.returnDate,
+      };
+    });
+
     return {
-      data: loans,
+      data: cleanLoans,
       meta: {
         page,
         limit,
@@ -284,8 +390,34 @@ export class LoansService {
       .take(limit)
       .getManyAndCount();
 
+    if (loans.length === 0) {
+      throw new NotFoundException('No loans found');
+    }
+
+    const cleanLoans = loans.map((loan) => {
+      return {
+        id: loan.id,
+        status: loan.status,
+        requestDate: loan.requestDate,
+        dueDate: loan.dueDate,
+        book: {
+          id: loan.book.id,
+          title: loan.book.title,
+          author: loan.book.author,
+        },
+        user: {
+          id: loan.user.id,
+          name: loan.user.name,
+          email: loan.user.email,
+        },
+        renewalCount: loan.renewalCount,
+        pickupDate: loan.pickupDate,
+        returnDate: loan.returnDate,
+      };
+    });
+
     return {
-      data: loans,
+      data: cleanLoans,
       meta: {
         page,
         limit,
@@ -318,7 +450,29 @@ export class LoansService {
       throw new NotFoundException('Loan not found');
     }
 
-    return loan;
+    const cleanLoan = {
+      id: loan.id,
+      status: loan.status,
+      requestDate: loan.requestDate,
+      dueDate: loan.dueDate,
+      book: {
+        id: loan.book.id,
+        title: loan.book.title,
+        quantity: loan.book.quantity,
+        availability: loan.book.availability,
+        author: loan.book.author,
+      },
+      user: {
+        id: loan.user.id,
+        name: loan.user.name,
+        email: loan.user.email,
+      },
+      renewalCount: loan.renewalCount,
+      pickupDate: loan.pickupDate,
+      returnDate: loan.returnDate,
+    };
+
+    return cleanLoan;
   }
 
   async getOverdueLoans(page: number = 1, limit: number = 10) {
@@ -382,29 +536,38 @@ export class LoansService {
     return totalDuration / completedLoans.length / (1000 * 60 * 60 * 24);
   }
 
-  async getUserLoansByEmail(email: string, tokenPayload: TokenPayloadDto) {
+  async getUserLoansByEmail(email: string) {
     const data = await this.userRepository.findOne({
       where: { email },
-      relations: ['loans'],
+      relations: ['loans', 'loans.book'],
     });
 
     if (!data) {
       throw new NotFoundException('User not found');
     }
 
-    const applicantPermissions = await this.userRepository.findOne({
-      where: { id: tokenPayload.sub },
-      select: ['id', 'permitions'],
+    const cleanLoans = data.loans.map((loan) => {
+      return {
+        id: loan.id,
+        status: loan.status,
+        requestDate: loan.requestDate,
+        dueDate: loan.dueDate,
+        book: {
+          id: loan.book.id,
+          title: loan.book.title,
+          author: loan.book.author,
+        },
+        user: {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+        },
+        renewalCount: loan.renewalCount,
+        pickupDate: loan.pickupDate,
+        returnDate: loan.returnDate,
+      };
     });
 
-    if (
-      data.id !== tokenPayload.sub &&
-      !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
-      !applicantPermissions.permitions.includes(RoutePolicies.librarian)
-    ) {
-      throw new ForbiddenException('You are not the owner of this loan');
-    }
-
-    return data;
+    return cleanLoans;
   }
 }

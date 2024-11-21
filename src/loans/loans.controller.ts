@@ -151,14 +151,11 @@ export class LoansController {
   @Get('search/email')
   @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
   @UseGuards(AuthAndPolicyGuard)
-  async getUserLoanByEmail(
-    @Query('email') email: string,
-    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
-  ) {
+  async getUserLoanByEmail(@Query('email') email: string) {
     if (!email) {
       throw new NotFoundException('Email parameter is required');
     }
-    return this.loansService.getUserLoansByEmail(email, tokenPayload);
+    return this.loansService.getUserLoansByEmail(email);
   }
 
   @Get('directly/:bookId/:userId')
