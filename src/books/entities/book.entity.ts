@@ -28,8 +28,8 @@ export class Book {
   @Column({ type: 'int' })
   year: number;
 
-  // @Column({ default: '' })
-  // cover: string;
+  @Column({ default: '' })
+  cover: string;
 
   @Column({ type: 'varchar', length: 255 })
   isbn: string;

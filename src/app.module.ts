@@ -13,6 +13,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import appConfig from './app.config';
 import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -46,6 +48,10 @@ import { AuthModule } from './auth/auth.module';
           synchronize: configService.get<boolean>('database.synchronize'),
         };
       },
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, '..', 'pictures'),
+      serveRoot: '/pictures',
     }),
     LibraryEventsModule,
     BooksModule,

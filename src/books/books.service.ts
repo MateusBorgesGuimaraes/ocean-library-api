@@ -1,10 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
 import { Repository } from 'typeorm';
 import { SearchBookDto } from './dto/search-book.dto';
+import * as path from 'path';
+import * as fs from 'fs/promises';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class BooksService {
@@ -101,5 +108,36 @@ export class BooksService {
         totalPages: Math.ceil(total / searchDto.limit),
       },
     };
+  }
+
+  async uploadCover(file: Express.Multer.File, id: number) {
+    const book = await this.bookRepository.findOneBy({
+      id: id,
+    });
+
+    if (!book) {
+      throw new NotFoundException('Book not found');
+    }
+
+    if (file.size < 1024) {
+      throw new BadRequestException('File too small');
+    }
+
+    const fileExtension = path
+      .extname(file.originalname)
+      .toLowerCase()
+      .substring(1);
+
+    const fileName = randomUUID() + `id=${id}.${fileExtension}`;
+    const fileFullPath = path.resolve(process.cwd(), 'pictures', fileName);
+
+    // talvez fazer a validacao do tipo do arquivo
+
+    await fs.writeFile(fileFullPath, file.buffer);
+
+    book.cover = fileName;
+
+    await this.bookRepository.save(book);
+    return book;
   }
 }

@@ -123,6 +123,22 @@ Content-Type: application/json
   "category": 13
 }
 
+### Upload da capa do livro
+POST {{baseUrl}}/books/upload-cover/7
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
+
+------BoundaryDelimitadorHttp
+Content-Disposition: form-data; name="file"; filename="abc.jpg"
+Content-Type: image/jpeg
+
+< ./dev/images/cover-9.jpg
+------BoundaryDelimitadorHttp--
+
+### Ver capa
+GET {{baseUrl}}/pictures/08dbebd6-53d8-4241-a645-e7cc470365cfid=7.jpg
+
+
 ### Atualiza um livro
 PATCH  {{baseUrl}}/books/8
 Authorization: Bearer {{authToken}}
