@@ -9,6 +9,10 @@ import {
   ParseIntPipe,
   UseGuards,
   Query,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipeBuilder,
+  HttpStatus,
 } from '@nestjs/common';
 import { LibraryEventsService } from './library-events.service';
 import { CreateLibraryEventDto } from './dto/create-library-event.dto';
@@ -20,6 +24,7 @@ import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
 import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('library-events')
 export class LibraryEventsController {
@@ -44,6 +49,25 @@ export class LibraryEventsController {
       registerDto,
       tokenPayload,
     );
+  }
+
+  @UseGuards(AuthAndPolicyGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.socialMedia)
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('upload-banner/:id')
+  async uploadBanner(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({ fileType: /jpg|jpeg|png/g })
+        .addMaxSizeValidator({ maxSize: 5 * (1024 * 1024) })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    file: Express.Multer.File,
+    @Param('id') id: string,
+  ) {
+    return this.libraryEventsService.uploadBanner(file, +id);
   }
 
   @Get()

@@ -57,6 +57,21 @@ Content-Type: application/json
   "isActive": true
 }
 
+### Upload da cover Image da noticia
+POST {{baseUrl}}/news/upload-cover-image/9
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
+
+------BoundaryDelimitadorHttp
+Content-Disposition: form-data; name="file"; filename="abc.jpg"
+Content-Type: image/jpeg
+
+< ./dev/images/news-4.jpg
+------BoundaryDelimitadorHttp--
+
+### Ver capa
+GET {{baseUrl}}/pictures/news-9.jpg
+
 ### Deleta uma noticia
 DELETE {{baseUrl}}/news/10
 Authorization: Bearer {{authToken}}
@@ -136,7 +151,7 @@ Content-Type: image/jpeg
 ------BoundaryDelimitadorHttp--
 
 ### Ver capa
-GET {{baseUrl}}/pictures/08dbebd6-53d8-4241-a645-e7cc470365cfid=7.jpg
+GET {{baseUrl}}/pictures/book-7.jpg
 
 
 ### Atualiza um livro
@@ -186,6 +201,21 @@ Content-Type: application/json
 {
   "title": "Digital Research Workshop"
 }
+
+### Upload do banner de um evento
+POST {{baseUrl}}/library-events/upload-banner/1
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
+
+------BoundaryDelimitadorHttp
+Content-Disposition: form-data; name="file"; filename="abc.jpg"
+Content-Type: image/jpeg
+
+< ./dev/images/event-2.jpg
+------BoundaryDelimitadorHttp--
+
+### Ver capa
+GET {{baseUrl}}/pictures/event-1.jpg
 
 ### Deleta um evento
 DELETE {{baseUrl}}/library-events/8

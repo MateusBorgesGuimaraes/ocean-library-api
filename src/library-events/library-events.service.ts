@@ -14,6 +14,8 @@ import { User } from 'src/users/entities/user.entity';
 import { RegisterEventDto } from './dto/register-event.dto';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
+import * as path from 'path';
+import * as fs from 'fs/promises';
 
 @Injectable()
 export class LibraryEventsService {
@@ -308,5 +310,36 @@ export class LibraryEventsService {
         },
       })),
     }));
+  }
+
+  async uploadBanner(file: Express.Multer.File, id: number) {
+    const event = await this.libraryEventsRepository.findOneBy({
+      id: id,
+    });
+
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
+    if (file.size < 1024) {
+      throw new BadRequestException('File too small');
+    }
+
+    const fileExtension = path
+      .extname(file.originalname)
+      .toLowerCase()
+      .substring(1);
+
+    const fileName = `event-${id}.${fileExtension}`;
+    const fileFullPath = path.resolve(process.cwd(), 'pictures', fileName);
+
+    // talvez fazer a validacao do tipo do arquivo
+
+    await fs.writeFile(fileFullPath, file.buffer);
+
+    event.banner = fileName;
+
+    await this.libraryEventsRepository.save(event);
+    return event;
   }
 }

@@ -24,12 +24,7 @@ export class News {
   })
   content: string;
 
-  @Column({
-    type: 'varchar',
-    length: 255,
-    nullable: true,
-    default: null,
-  })
+  @Column({ default: '' })
   coverImage: string;
 
   @Column({

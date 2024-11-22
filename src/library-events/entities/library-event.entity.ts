@@ -25,7 +25,7 @@ export class LibraryEvent {
   @Column({ type: 'varchar', length: 255 })
   location: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ default: '' })
   banner: string;
 
   @Column({ type: 'int' })

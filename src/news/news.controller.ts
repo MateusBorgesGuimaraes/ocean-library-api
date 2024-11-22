@@ -9,6 +9,10 @@ import {
   UseGuards,
   Query,
   BadRequestException,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipeBuilder,
+  HttpStatus,
 } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
@@ -16,6 +20,7 @@ import { UpdateNewsDto } from './dto/update-news.dto';
 import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('news')
 export class NewsController {
@@ -26,6 +31,25 @@ export class NewsController {
   @UseGuards(AuthAndPolicyGuard)
   create(@Body() createNewsDto: CreateNewsDto) {
     return this.newsService.create(createNewsDto);
+  }
+
+  @UseGuards(AuthAndPolicyGuard)
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.socialMedia)
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('upload-cover-image/:id')
+  async uploadCoverImage(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({ fileType: /jpg|jpeg|png/g })
+        .addMaxSizeValidator({ maxSize: 5 * (1024 * 1024) })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    file: Express.Multer.File,
+    @Param('id') id: string,
+  ) {
+    return this.newsService.uploadCoverImage(file, +id);
   }
 
   @Get()

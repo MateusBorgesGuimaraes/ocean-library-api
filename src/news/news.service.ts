@@ -1,12 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { News } from './entities/news.entity';
 import { ILike, Repository } from 'typeorm';
+import * as path from 'path';
+import * as fs from 'fs/promises';
 
 @Injectable()
 export class NewsService {
+  libraryEventsRepository: any;
   constructor(
     @InjectRepository(News)
     private readonly newsRepository: Repository<News>,
@@ -97,5 +104,36 @@ export class NewsService {
       throw new NotFoundException('News not found');
     }
     return this.newsRepository.remove(news);
+  }
+
+  async uploadCoverImage(file: Express.Multer.File, id: number) {
+    const news = await this.newsRepository.findOneBy({
+      id: id,
+    });
+
+    if (!news) {
+      throw new NotFoundException('News not found');
+    }
+
+    if (file.size < 1024) {
+      throw new BadRequestException('File too small');
+    }
+
+    const fileExtension = path
+      .extname(file.originalname)
+      .toLowerCase()
+      .substring(1);
+
+    const fileName = `news-${id}.${fileExtension}`;
+    const fileFullPath = path.resolve(process.cwd(), 'pictures', fileName);
+
+    // talvez fazer a validacao do tipo do arquivo
+
+    await fs.writeFile(fileFullPath, file.buffer);
+
+    news.coverImage = fileName;
+
+    await this.newsRepository.save(news);
+    return news;
   }
 }

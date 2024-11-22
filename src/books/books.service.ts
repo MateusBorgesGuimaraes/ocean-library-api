@@ -11,7 +11,6 @@ import { Repository } from 'typeorm';
 import { SearchBookDto } from './dto/search-book.dto';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import { randomUUID } from 'crypto';
 
 @Injectable()
 export class BooksService {
@@ -128,7 +127,7 @@ export class BooksService {
       .toLowerCase()
       .substring(1);
 
-    const fileName = randomUUID() + `id=${id}.${fileExtension}`;
+    const fileName = `book-${id}.${fileExtension}`;
     const fileFullPath = path.resolve(process.cwd(), 'pictures', fileName);
 
     // talvez fazer a validacao do tipo do arquivo
