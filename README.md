@@ -77,7 +77,8 @@ A aplicação suporta as seguintes operações:
 - **Autenticação e Autorização**: Implementação com hash de senhas (bcrypt) e sistema de roles.
 - **Sistema de Permissões**: Baseado nos seguintes papéis:
   - **Admin**: Permissão total.
-  - **User**: Pode visualizar e buscar livros, eventos e notícias, mas sem interagir diretamente.
+  - **Usuario não cadastrado**: Pode visualizar e buscar livros, eventos e notícias sem interagir diretamente.
+  - **User**: Pode visualizar e buscar livros, eventos e notícias, e interagir diretamente, como por exemplo, se cadastrar em um evento ou pedir um emprestimo.
   - **SocialMedia**: Gerencia eventos e notícias, exceto ações envolvendo usuários.
   - **StockController**: Gerencia solicitações e operações relacionadas a livros, como reposição, adição e edição.
   - **Librarian**: Gerencia empréstimos e visualiza algumas informações dos usuários nos eventos.
