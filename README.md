@@ -1,85 +1,90 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Ocean Library API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+**Ocean Library API** é uma REST API desenvolvida utilizando **NestJS**, **PostgreSQL** e a ORM **TypeORM**. Este projeto foi criado com o objetivo de estudar e aprender as tecnologias mencionadas, servindo como backend para um futuro sistema de biblioteca.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Funcionalidades
 
-## Description
+A aplicação suporta as seguintes operações:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 1. Rotas Gerais (AppController)
+- **GET /**: Rota inicial, utilizada para verificação de status ou como página principal.
 
-## Project setup
+### 2. Eventos da Biblioteca (LibraryEventsController)
+- **POST /library-events**: Cria um evento.
+- **POST /library-events/:id/register**: Inscreve um usuário em um evento.
+- **POST /library-events/upload-banner/:id**: Faz upload de um banner para o evento.
+- **GET /library-events**: Lista todos os eventos.
+- **GET /library-events/:id**: Busca detalhes de um evento específico.
+- **GET /library-events/:id/registrations**: Obtém inscrições de um evento.
+- **GET /library-events/search/title**: Pesquisa eventos por título.
+- **GET /library-events/user/:userId/events**: Lista eventos associados a um usuário.
+- **PATCH /library-events/:id**: Atualiza detalhes de um evento.
+- **DELETE /library-events/:id**: Remove um evento.
+- **DELETE /library-events/:eventId/registrations/:userId**: Remove a inscrição de um usuário em um evento.
 
-```bash
-$ npm install
-```
+### 3. Livros (BooksController)
+- **POST /books**: Adiciona um novo livro.
+- **POST /books/upload-cover/:id**: Faz upload da capa de um livro.
+- **GET /books/search**: Pesquisa livros.
+- **GET /books/:id**: Busca detalhes de um livro.
+- **PATCH /books/:id**: Atualiza informações de um livro.
+- **DELETE /books/:id**: Remove um livro.
 
-## Compile and run the project
+### 4. Empréstimos (LoansController)
+- **GET /loans/statistics**: Exibe estatísticas de empréstimos.
+- **POST /loans**: Cria um empréstimo.
+- **GET /loans/findAll**: Lista todos os empréstimos.
+- **GET /loans/:id**: Busca detalhes de um empréstimo.
+- **PUT /loans/:id/pickup**: Marca um empréstimo como retirado.
+- **PUT /loans/:id/renew**: Renova um empréstimo.
+- **PUT /loans/:id/return**: Marca um empréstimo como devolvido.
+- **GET /loans/user/:userId**: Lista os empréstimos de um usuário.
+- **GET /loans/status/overdue**: Lista empréstimos atrasados.
+- **GET /loans/search/email**: Pesquisa empréstimos pelo email do usuário.
+- **GET /loans/directly/:bookId/:userId**: Realiza empréstimo direto já com o status de "retirado".
 
-```bash
-# development
-$ npm run start
+### 5. Categorias (CategoryController)
+- **POST /category**: Adiciona uma nova categoria.
+- **GET /category**: Lista todas as categorias.
+- **GET /category/:id**: Busca uma categoria específica.
+- **PATCH /category/:id**: Atualiza uma categoria.
+- **DELETE /category/:id**: Remove uma categoria.
 
-# watch mode
-$ npm run start:dev
+### 6. Solicitações de Livros (RequestsController)
+- **POST /requests**: Adiciona uma solicitação de livro.
+- **GET /requests**: Lista todas as solicitações.
+- **DELETE /requests/:id**: Remove uma solicitação.
 
-# production mode
-$ npm run start:prod
-```
+### 7. Notícias (NewsController)
+- **POST /news**: Cria uma notícia.
+- **POST /news/upload-cover-image/:id**: Faz upload da imagem de capa de uma notícia.
+- **GET /news**: Lista todas as notícias.
+- **GET /news/:id**: Busca detalhes de uma notícia específica.
+- **GET /news/search/title**: Pesquisa notícias por título.
+- **PATCH /news/:id**: Atualiza uma notícia.
+- **DELETE /news/:id**: Remove uma notícia.
 
-## Run tests
+### 8. Usuários (UsersController)
+- **POST /users**: Cria um novo usuário.
+- **GET /users**: Lista todos os usuários.
+- **GET /users/:id**: Busca detalhes de um usuário.
+- **GET /users/search/email**: Pesquisa usuários por email.
 
-```bash
-# unit tests
-$ npm run test
+### 9. Autenticação (AuthController)
+- **POST /auth/login**: Realiza login do usuário.
 
-# e2e tests
-$ npm run test:e2e
+## Recursos Adicionais
+- **Autenticação e Autorização**: Implementação com hash de senhas (bcrypt) e sistema de roles.
+- **Sistema de Permissões**: Baseado nos seguintes papéis:
+  - **Admin**: Permissão total.
+  - **User**: Pode visualizar e buscar livros, eventos e notícias, mas sem interagir diretamente.
+  - **SocialMedia**: Gerencia eventos e notícias, exceto ações envolvendo usuários.
+  - **StockController**: Gerencia solicitações e operações relacionadas a livros, como reposição, adição e edição.
+  - **Librarian**: Gerencia empréstimos e visualiza algumas informações dos usuários nos eventos.
 
-# test coverage
-$ npm run test:cov
-```
+### Observações
+- Usuários podem ter múltiplos papéis. Exemplo: Maria pode ser **[SocialMedia, StockController]**.
+- Todos os usuários cadastrados possuem, por padrão, o papel de **User**.
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+Este projeto foi desenvolvido como parte de um estudo e serve como base para futuras melhorias e implementações.
