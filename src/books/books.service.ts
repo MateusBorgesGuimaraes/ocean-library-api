@@ -35,6 +35,19 @@ export class BooksService {
     throw new NotFoundException('Book not found');
   }
 
+  async getLastEight() {
+    const books = await this.bookRepository.find({
+      take: 8,
+      order: { createdAt: 'DESC' },
+    });
+
+    if (!books || books.length === 0) {
+      throw new NotFoundException('Books not found');
+    }
+
+    return books;
+  }
+
   async update(id: number, updateBookDto: UpdateBookDto) {
     const book = await this.bookRepository.findOneBy({ id });
     if (!book) {

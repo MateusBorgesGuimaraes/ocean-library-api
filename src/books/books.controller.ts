@@ -58,6 +58,12 @@ export class BooksController {
     return this.booksService.uploadCover(file, +id);
   }
 
+  @Get('latest')
+  getLatestBooks() {
+    console.log('passou no controler');
+    return this.booksService.getLastEight();
+  }
+
   @Get('search')
   searchBooks(@Query() searchDto: SearchBookDto) {
     return this.booksService.searchBooks(searchDto);

@@ -116,10 +116,21 @@ DELETE {{baseUrl}}/category/19
 Authorization: Bearer {{authToken}}
 
 
+
+
+
+
+
+
+
+
 # BOOK
 
 ### Exibe um livro pelo id
 GET {{baseUrl}}/books/7
+
+### Pega os ultimos 8 livros adicionados
+GET {{baseUrl}}/books/latest
 
 ### Cria um livro
 POST {{baseUrl}}/books

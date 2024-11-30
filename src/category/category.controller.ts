@@ -49,7 +49,6 @@ export class CategoryController {
     return this.categoryService.update(+id, updateCategoryDto);
   }
 
-  // ta retronando estranho
   @Delete(':id')
   // @HttpCode(HttpStatus.NO_CONTENT)
   @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
