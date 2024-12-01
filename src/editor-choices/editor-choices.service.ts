@@ -18,8 +18,8 @@ export class EditorChoicesService {
       where: { isActive: true },
     });
 
-    if (activeChoicesCount >= 8) {
-      throw new BadRequestException('Maximum of 8 editor choices allowed');
+    if (activeChoicesCount >= 10) {
+      throw new BadRequestException('Maximum of 10 editor choices allowed');
     }
 
     const book = await this.bookRepository.findOne({ where: { id: bookId } });

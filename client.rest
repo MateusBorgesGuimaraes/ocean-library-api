@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3001
 @authToken = {{authenticate.response.body.accessToken}}
 
 # USER
@@ -332,7 +332,7 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/editor-choices
 
 ### Adiciona um livro no EC
-POST {{baseUrl}}/editor-choices/17
+POST {{baseUrl}}/editor-choices/24
 Authorization: Bearer {{authToken}}
 
 ### Remove um livro no EC

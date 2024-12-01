@@ -60,7 +60,7 @@ export class BooksController {
 
   @Get('latest')
   getLatestBooks() {
-    return this.booksService.getLastEight();
+    return this.booksService.getLastTen();
   }
 
   @Get('search')
