@@ -99,7 +99,7 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "name": "scfdsfifdhdfsf-fi"
+  "name": "misterio"
 }
 
 ### Atualiza uma categoria
@@ -119,11 +119,6 @@ Authorization: Bearer {{authToken}}
 
 
 
-
-
-
-
-
 # BOOK
 
 ### Exibe um livro pelo id
@@ -138,19 +133,19 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "The Art of War for test",
-  "author": "Sun Tzu",
-  "publisher": "Simon & Schuster",
-  "year": -500,
-  "isbn": "978-1590302255",
-  "synopsis": "An ancient Chinese military treatise that provides guidance on military strategy and tactics, which has influenced both military and business thinking.",
+  "title": "Dune",
+  "author": "Frank Herbert",
+  "publisher": "Chilton Books",
+  "year": 1965,
+  "isbn": "978-0441172719",
+  "synopsis": "A groundbreaking science fiction epic about politics, religion, and ecological survival on a desert planet.",
   "availability": true,
-  "quantity": 12,
-  "category": 13
+  "quantity": 20,
+  "category": 15
 }
 
 ### Upload da capa do livro
-POST {{baseUrl}}/books/upload-cover/7
+POST {{baseUrl}}/books/upload-cover/37
 Authorization: Bearer {{authToken}}
 Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 
@@ -158,11 +153,11 @@ Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 Content-Disposition: form-data; name="file"; filename="abc.jpg"
 Content-Type: image/jpeg
 
-< ./dev/images/cover-9.jpg
+< ./dev/images/cover-30.jpg
 ------BoundaryDelimitadorHttp--
 
 ### Ver capa
-GET {{baseUrl}}/pictures/book-7.jpg
+GET {{baseUrl}}/pictures/book-37.jpg
 
 
 ### Atualiza um livro
@@ -331,6 +326,20 @@ GET {{baseUrl}}/loans/directly/3/21
 Authorization: Bearer {{authToken}}
 
 
+# EDITOR CHOICES
+
+### Pega os livros do EC
+GET {{baseUrl}}/editor-choices
+
+### Adiciona um livro no EC
+POST {{baseUrl}}/editor-choices/17
+Authorization: Bearer {{authToken}}
+
+### Remove um livro no EC
+DELETE {{baseUrl}}/editor-choices/24
+
+### Ordena um livro no EC
+PUT {{baseUrl}}/editor-choices/5/order/2
 
 # AUTH
 

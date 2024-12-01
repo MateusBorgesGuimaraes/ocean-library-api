@@ -14,6 +14,7 @@ import * as Joi from '@hapi/joi';
 import appConfig from './app.config';
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { EditorChoicesModule } from './editor-choices/editor-choices.module';
 import * as path from 'path';
 
 @Module({
@@ -61,6 +62,7 @@ import * as path from 'path';
     NewsModule,
     UsersModule,
     AuthModule,
+    EditorChoicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

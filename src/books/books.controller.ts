@@ -60,7 +60,6 @@ export class BooksController {
 
   @Get('latest')
   getLatestBooks() {
-    console.log('passou no controler');
     return this.booksService.getLastEight();
   }
 
