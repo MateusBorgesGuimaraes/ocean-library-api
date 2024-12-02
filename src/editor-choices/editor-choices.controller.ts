@@ -13,41 +13,54 @@ import { EditorChoice } from './entities/editor-choice.entity';
 import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
 import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
+import { FeaturedType } from './enum/featured-type.enum';
 
 @Controller('editor-choices')
 export class EditorChoicesController {
   constructor(private readonly editorChoicesService: EditorChoicesService) {}
 
-  @Post(':bookId')
+  @Post(':type/:contentId')
   @SetRoutePolicy(RoutePolicies.librarian, RoutePolicies.admin)
   @UseGuards(AuthAndPolicyGuard)
   async addEditorChoice(
-    @Param('bookId', ParseIntPipe) bookId: number,
+    @Param('type') type: FeaturedType,
+    @Param('contentId', ParseIntPipe) contentId: number,
   ): Promise<EditorChoice> {
-    return this.editorChoicesService.addEditorChoice(bookId);
+    return this.editorChoicesService.addEditorChoice(type, contentId);
   }
 
-  @Delete(':bookId')
-  @SetRoutePolicy(RoutePolicies.librarian, RoutePolicies.admin)
-  @UseGuards(AuthAndPolicyGuard)
-  async removeEditorChoice(
-    @Param('bookId', ParseIntPipe) bookId: number,
-  ): Promise<void> {
-    return this.editorChoicesService.removeEditorChoice(bookId);
+  @Get(':type')
+  async getActiveEditorChoices(
+    @Param('type') type: FeaturedType,
+  ): Promise<EditorChoice[]> {
+    return this.editorChoicesService.getActiveEditorChoices(type);
   }
 
   @Get()
-  async getActiveEditorChoices(): Promise<EditorChoice[]> {
-    return this.editorChoicesService.getActiveEditorChoices();
+  async getAllEditorChoicesContent(): Promise<{
+    books: EditorChoice[];
+    news: EditorChoice[];
+    events: EditorChoice[];
+  }> {
+    return this.editorChoicesService.getAllEditorChoicesContent();
   }
 
-  @Put(':bookId/order/:newOrder')
+  @Delete(':id')
+  @SetRoutePolicy(RoutePolicies.librarian, RoutePolicies.admin)
+  @UseGuards(AuthAndPolicyGuard)
+  async removeEditorChoice(
+    @Param('bookId', ParseIntPipe) id: number,
+  ): Promise<void> {
+    return this.editorChoicesService.removeEditorChoice(id);
+  }
+
+  @Put(':id/order/:newOrder')
   @SetRoutePolicy(RoutePolicies.librarian, RoutePolicies.admin)
   @UseGuards(AuthAndPolicyGuard)
   async updateDisplayOrder(
-    @Param('bookId', ParseIntPipe) bookId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Param('newOrder', ParseIntPipe) newOrder: number,
   ): Promise<EditorChoice> {
-    return this.editorChoicesService.updateDisplayOrder(bookId, newOrder);
+    return this.editorChoicesService.updateDisplayOrder(id, newOrder);
   }
 }

@@ -28,7 +28,7 @@ Content-Type: application/json
 # NEWS
 
 ### Exibe todas as noticias
-GET {{baseUrl}}/news?page=1&limit=1
+GET {{baseUrl}}/news?page=1&limit=20
 
 ### Exibe uma noticia pelo id
 GET {{baseUrl}}/news/9
@@ -38,12 +38,12 @@ POST {{baseUrl}}/news
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
-{
-  "title": "Local Community Event Highlights hbgfj",
-  "content": "Recap of the annual community festival, showcasing local talents and cultural diversity.",
-  "tags": ["community", "local-events", "culture"],
-  "isActive": true
-}
+  {
+    "title": "Ocean Library Offers Free Career Counseling Sessions",
+    "content": "To support job seekers, the Ocean Library is offering free career counseling sessions every Thursday. Experts provide guidance on resume building, interview preparation, and career planning. The initiative has received positive feedback from participants eager to advance their professional goals.",
+    "tags": ["careers", "education", "services"],
+    "isActive": true
+  }
 
 ### Atualiza uma noticia
 PATCH  {{baseUrl}}/news/9
@@ -58,7 +58,7 @@ Content-Type: application/json
 }
 
 ### Upload da cover Image da noticia
-POST {{baseUrl}}/news/upload-cover-image/9
+POST {{baseUrl}}/news/upload-cover-image/20
 Authorization: Bearer {{authToken}}
 Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 
@@ -66,11 +66,11 @@ Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 Content-Disposition: form-data; name="file"; filename="abc.jpg"
 Content-Type: image/jpeg
 
-< ./dev/images/news-4.jpg
+< ./dev/images/news-banner-10.jpg
 ------BoundaryDelimitadorHttp--
 
 ### Ver capa
-GET {{baseUrl}}/pictures/news-9.jpg
+GET {{baseUrl}}/pictures/news-20.jpg
 
 ### Deleta uma noticia
 DELETE {{baseUrl}}/news/10
@@ -191,16 +191,17 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "fsdfsf hghf",
-  "description": "Test event with empty title",
-  "date": "2024-07-15T14:00:00Z",
-  "location": "Main Library",
-  "banner": "test.jpg",
-  "seats": 30
-}
+  "title": "Upcoming Event: Art and Illustration Exhibition",
+  "description": "A stunning exhibition showcasing works by local artists, focusing on themes of literature and storytelling through visuals.",
+  "date": "2025-02-05T16:00:00Z",
+  "location": "Main Library - Exhibition Hall",
+  "banner": "art-exhibition.jpg",
+  "seats": 28
+
+
 
 ### Atualiza um evento
-PATCH  {{baseUrl}}/library-events/8
+PATCH  {{baseUrl}}/library-events/9
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
@@ -209,7 +210,7 @@ Content-Type: application/json
 }
 
 ### Upload do banner de um evento
-POST {{baseUrl}}/library-events/upload-banner/1
+POST {{baseUrl}}/library-events/upload-banner/14
 Authorization: Bearer {{authToken}}
 Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 
@@ -217,11 +218,11 @@ Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 Content-Disposition: form-data; name="file"; filename="abc.jpg"
 Content-Type: image/jpeg
 
-< ./dev/images/event-2.jpg
+< ./dev/images/event-banner-6.jpg
 ------BoundaryDelimitadorHttp--
 
 ### Ver capa
-GET {{baseUrl}}/pictures/event-1.jpg
+GET {{baseUrl}}/pictures/event-14.jpg
 
 ### Deleta um evento
 DELETE {{baseUrl}}/library-events/8
@@ -328,18 +329,23 @@ Authorization: Bearer {{authToken}}
 
 # EDITOR CHOICES
 
-### Pega os livros do EC
-GET {{baseUrl}}/editor-choices
+### Pega os os items do EC por tipo
+GET {{baseUrl}}/editor-choices/news
 
-### Adiciona um livro no EC
-POST {{baseUrl}}/editor-choices/24
+### Adiciona um item no EC
+POST {{baseUrl}}/editor-choices/event/14
 Authorization: Bearer {{authToken}}
 
-### Remove um livro no EC
-DELETE {{baseUrl}}/editor-choices/24
+### Pega todos os no EC
+GET {{baseUrl}}/editor-choices
 
-### Ordena um livro no EC
+### Remove um item no EC
+DELETE {{baseUrl}}/editor-choices/24
+Authorization: Bearer {{authToken}}
+
+### Ordena um item no EC
 PUT {{baseUrl}}/editor-choices/5/order/2
+Authorization: Bearer {{authToken}}
 
 # AUTH
 

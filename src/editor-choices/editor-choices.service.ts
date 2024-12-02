@@ -3,64 +3,107 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EditorChoice } from './entities/editor-choice.entity';
 import { Book } from 'src/books/entities/book.entity';
+import { News } from 'src/news/entities/news.entity';
+import { LibraryEvent } from 'src/library-events/entities/library-event.entity';
+import { FeaturedType } from './enum/featured-type.enum';
 
 @Injectable()
 export class EditorChoicesService {
+  private readonly MAX_FEATURED_LIMITS = {
+    [FeaturedType.BOOK]: 10,
+    [FeaturedType.NEWS]: 3,
+    [FeaturedType.EVENT]: 3,
+  };
   constructor(
     @InjectRepository(EditorChoice)
     private editorChoicesRepository: Repository<EditorChoice>,
     @InjectRepository(Book)
     private bookRepository: Repository<Book>,
+    @InjectRepository(News)
+    private newsRepository: Repository<News>,
+    @InjectRepository(LibraryEvent)
+    private libraryEventRepository: Repository<News>,
   ) {}
 
-  async addEditorChoice(bookId: number): Promise<EditorChoice> {
-    const activeChoicesCount = await this.editorChoicesRepository.count({
-      where: { isActive: true },
-    });
+  async addEditorChoice(
+    type: FeaturedType,
+    contentId: number,
+  ): Promise<EditorChoice> {
+    const activeChoicesCount = await this.countActiveFeaturedByType(type);
+    const maxLimit = this.MAX_FEATURED_LIMITS[type];
 
-    if (activeChoicesCount >= 10) {
-      throw new BadRequestException('Maximum of 10 editor choices allowed');
+    if (activeChoicesCount >= maxLimit) {
+      throw new BadRequestException(
+        `Maximum of 10 ${maxLimit} featured choices allowed`,
+      );
     }
 
-    const book = await this.bookRepository.findOne({ where: { id: bookId } });
-    if (!book) {
-      throw new BadRequestException('Book not found');
+    let content;
+    switch (type) {
+      case FeaturedType.BOOK:
+        content = await this.bookRepository.findOne({
+          where: { id: contentId },
+        });
+        break;
+      case FeaturedType.NEWS:
+        content = await this.newsRepository.findOne({
+          where: { id: contentId },
+        });
+        break;
+      case FeaturedType.EVENT:
+        content = await this.libraryEventRepository.findOne({
+          where: { id: contentId },
+        });
+        break;
+      default:
+        throw new BadRequestException('Invalid content type');
     }
 
-    const editorChoice = this.editorChoicesRepository.create({
-      book,
+    if (!content) {
+      throw new BadRequestException(`${type} not found`);
+    }
+
+    const featuredContent = this.editorChoicesRepository.create({
+      type,
+      [type]: content,
       isActive: true,
       displayOrder: activeChoicesCount + 1,
     });
 
-    return this.editorChoicesRepository.save(editorChoice);
+    return this.editorChoicesRepository.save(featuredContent);
   }
 
-  async removeEditorChoice(bookId: number): Promise<void> {
-    const editorChoice = await this.editorChoicesRepository.findOne({
-      where: { book: { id: bookId }, isActive: true },
+  async removeEditorChoice(id: number): Promise<void> {
+    const featuredContent = await this.editorChoicesRepository.findOne({
+      where: { id, isActive: true },
     });
 
-    if (!editorChoice) {
-      throw new BadRequestException('Editor choice not found');
+    if (!featuredContent) {
+      throw new BadRequestException('Featured content not found');
     }
 
-    editorChoice.isActive = false;
-    await this.editorChoicesRepository.save(editorChoice);
+    featuredContent.isActive = false;
+    await this.editorChoicesRepository.save(featuredContent);
 
-    await this.reorderEditorChoices();
+    await this.reorderFeaturedContent(featuredContent.type);
   }
 
-  async getActiveEditorChoices(): Promise<EditorChoice[]> {
+  async getActiveEditorChoices(type: FeaturedType): Promise<EditorChoice[]> {
     return this.editorChoicesRepository.find({
-      where: { isActive: true },
+      where: {
+        type,
+        isActive: true,
+      },
       order: { displayOrder: 'ASC' },
     });
   }
 
-  private async reorderEditorChoices(): Promise<void> {
+  private async reorderFeaturedContent(type: FeaturedType): Promise<void> {
     const activeChoices = await this.editorChoicesRepository.find({
-      where: { isActive: true },
+      where: {
+        type,
+        isActive: true,
+      },
       order: { displayOrder: 'ASC' },
     });
 
@@ -71,28 +114,40 @@ export class EditorChoicesService {
     await this.editorChoicesRepository.save(activeChoices);
   }
 
+  private async countActiveFeaturedByType(type: FeaturedType): Promise<number> {
+    return this.editorChoicesRepository.count({
+      where: {
+        type,
+        isActive: true,
+      },
+    });
+  }
+
   async updateDisplayOrder(
-    bookId: number,
+    id: number,
     newOrder: number,
   ): Promise<EditorChoice> {
-    const editorChoice = await this.editorChoicesRepository.findOne({
-      where: { book: { id: bookId }, isActive: true },
+    const featuredContent = await this.editorChoicesRepository.findOne({
+      where: { id, isActive: true },
     });
 
-    if (!editorChoice) {
-      throw new BadRequestException('Editor choice not found');
+    if (!featuredContent) {
+      throw new BadRequestException('Featured content not found');
     }
 
     const activeChoices = await this.editorChoicesRepository.find({
-      where: { isActive: true },
+      where: {
+        type: featuredContent.type,
+        isActive: true,
+      },
       order: { displayOrder: 'ASC' },
     });
 
     const filteredChoices = activeChoices.filter(
-      (choice) => choice.id !== editorChoice.id,
+      (choice) => choice.id !== featuredContent.id,
     );
 
-    filteredChoices.splice(newOrder - 1, 0, editorChoice);
+    filteredChoices.splice(newOrder - 1, 0, featuredContent);
 
     filteredChoices.forEach((choice, index) => {
       choice.displayOrder = index + 1;
@@ -100,6 +155,26 @@ export class EditorChoicesService {
 
     await this.editorChoicesRepository.save(filteredChoices);
 
-    return editorChoice;
+    return featuredContent;
+  }
+
+  async getAllEditorChoicesContent(): Promise<{
+    books: EditorChoice[];
+    news: EditorChoice[];
+    events: EditorChoice[];
+  }> {
+    const featuredBooks = await this.getActiveEditorChoices(FeaturedType.BOOK);
+
+    const featuredNews = await this.getActiveEditorChoices(FeaturedType.NEWS);
+
+    const featuredEvents = await this.getActiveEditorChoices(
+      FeaturedType.EVENT,
+    );
+
+    return {
+      books: featuredBooks,
+      news: featuredNews,
+      events: featuredEvents,
+    };
   }
 }
