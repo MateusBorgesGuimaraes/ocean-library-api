@@ -14,6 +14,9 @@ import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
 import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 import { FeaturedType } from './enum/featured-type.enum';
+import { Book } from 'src/books/entities/book.entity';
+import { News } from 'src/news/entities/news.entity';
+import { LibraryEvent } from 'src/library-events/entities/library-event.entity';
 
 @Controller('editor-choices')
 export class EditorChoicesController {
@@ -38,11 +41,11 @@ export class EditorChoicesController {
 
   @Get()
   async getAllEditorChoicesContent(): Promise<{
-    books: EditorChoice[];
-    news: EditorChoice[];
-    events: EditorChoice[];
+    books: Book[];
+    news: News[];
+    events: LibraryEvent[];
   }> {
-    return this.editorChoicesService.getAllEditorChoicesContent();
+    return this.editorChoicesService.getAllEditorChoicesContentSimplified();
   }
 
   @Delete(':id')

@@ -177,4 +177,18 @@ export class EditorChoicesService {
       events: featuredEvents,
     };
   }
+
+  async getAllEditorChoicesContentSimplified(): Promise<{
+    books: Book[];
+    news: News[];
+    events: LibraryEvent[];
+  }> {
+    const fullContent = await this.getAllEditorChoicesContent();
+
+    return {
+      books: fullContent.books.map((choice) => choice.book),
+      news: fullContent.news.map((choice) => choice.news),
+      events: fullContent.events.map((choice) => choice.event),
+    };
+  }
 }
