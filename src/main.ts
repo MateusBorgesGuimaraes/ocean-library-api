@@ -7,5 +7,12 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableCors();
   await app.listen(3001);
+  //PAR TESTAR NO CELULAR
+  // app.enableCors({
+  //   origin: '*',
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //   allowedHeaders: 'Content-Type, Accept',
+  // });
+  // await app.listen(3001, '0.0.0.0');
 }
 bootstrap();

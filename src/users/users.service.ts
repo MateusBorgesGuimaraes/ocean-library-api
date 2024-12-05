@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -8,6 +9,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { ILike, Repository } from 'typeorm';
 import { HashingService } from 'src/auth/hashing/hashing.service';
+import { JwtService } from '@nestjs/jwt';
+import jwtConfig from 'src/auth/config/jwt.config';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
@@ -15,6 +19,9 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly hashingService: HashingService,
+    private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -34,9 +41,26 @@ export class UsersService {
       await this.userRepository.save(newUser);
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const accessToken = await this.jwtService.signAsync(
+        {
+          sub: newUser.id,
+          email: newUser.email,
+        },
+        {
+          audience: this.jwtConfiguration.audience,
+          issuer: this.jwtConfiguration.issuer,
+          secret: this.jwtConfiguration.secret,
+          expiresIn: this.jwtConfiguration.jwtTtl,
+        },
+      );
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { passwordHash: _, ...result } = newUser;
 
-      return result;
+      return {
+        ...result,
+        accessToken,
+      };
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('Usuario ja existe');

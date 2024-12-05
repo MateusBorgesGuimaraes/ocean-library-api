@@ -8,7 +8,7 @@ GET {{baseUrl}}/users
 Authorization: Bearer {{authToken}} 
 
 ### Exibe um usuario pelo id
-GET {{baseUrl}}/users/11
+GET {{baseUrl}}/users/24
 Authorization: Bearer {{authToken}}
 
 ### Pesquisa um usuario pelo email
@@ -16,12 +16,12 @@ GET {{baseUrl}}/users/search/email?email=ru
 Authorization: Bearer {{authToken}}
 
 ### Cria um usuario
-POST {{baseUrl}}/users
+POST {{baseUrl}}/users/register
 Content-Type: application/json
 
 {
-  "name": "shinji",
-  "email": "shinji@example.com",
+  "name": "nemu",
+  "email": "nemu@example.com",
   "password": "senha123"
 }
 

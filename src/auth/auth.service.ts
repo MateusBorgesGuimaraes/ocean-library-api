@@ -21,9 +21,11 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     let passwordIsValid = false;
     let throwError = true;
-    const user = await this.userRepository.findOneBy({
-      email: loginDto.email,
+    const user = await this.userRepository.findOne({
+      where: { email: loginDto.email },
+      select: ['id', 'email', 'passwordHash', 'permitions'],
     });
+
     if (user) {
       passwordIsValid = await this.hashingService.compare(
         loginDto.password,
@@ -54,6 +56,7 @@ export class AuthService {
 
     return {
       accessToken,
+      permitions: user.permitions,
     };
   }
 }

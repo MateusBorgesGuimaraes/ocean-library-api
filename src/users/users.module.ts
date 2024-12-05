@@ -11,7 +11,6 @@ import { LibraryEventRegistration } from 'src/library-events/entities/library-ev
   imports: [
     TypeOrmModule.forFeature([User, LibraryEventRegistration]),
     Loan,
-
     Request,
   ],
   controllers: [UsersController],
