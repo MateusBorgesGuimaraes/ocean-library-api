@@ -34,7 +34,7 @@ export class RoutePolicyGuard implements CanActivate {
     const { user }: { user: User } = tokenPayload;
 
     const hasRequiredPermission = routePoliciesRequired.some((policy) =>
-      user.permitions.includes(policy),
+      user.permissions.includes(policy),
     );
 
     if (!hasRequiredPermission) {

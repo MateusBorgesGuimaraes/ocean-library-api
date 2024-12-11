@@ -48,5 +48,5 @@ export class User {
   updatedAt: Date;
 
   @Column({ type: 'simple-array', default: [] })
-  permitions: RoutePolicies[];
+  permissions: RoutePolicies[];
 }

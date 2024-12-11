@@ -68,6 +68,11 @@ export class BooksController {
     return this.booksService.searchBooks(searchDto);
   }
 
+  @Get('search-simple')
+  searchBooksSimple(@Query() searchDto: SearchBookDto) {
+    return this.booksService.searchBooksSimple(searchDto);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.booksService.findOne(+id);

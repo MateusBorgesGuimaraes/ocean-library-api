@@ -23,7 +23,7 @@ export class AuthService {
     let throwError = true;
     const user = await this.userRepository.findOne({
       where: { email: loginDto.email },
-      select: ['id', 'name', 'email', 'passwordHash', 'permitions'],
+      select: ['id', 'name', 'email', 'passwordHash', 'permissions'],
     });
 
     if (user) {
@@ -59,7 +59,7 @@ export class AuthService {
       id: user.id,
       name: user.name,
       email: user.email,
-      permitions: user.permitions,
+      permissions: user.permissions,
     };
   }
 }

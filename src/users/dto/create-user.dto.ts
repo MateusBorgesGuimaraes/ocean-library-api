@@ -23,5 +23,5 @@ export class CreateUserDto {
   password: string;
 
   @IsEnum(RoutePolicies, { each: true })
-  permitions: RoutePolicies[] = [RoutePolicies.user];
+  permissions: RoutePolicies[] = [RoutePolicies.user];
 }

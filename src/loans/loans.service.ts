@@ -312,13 +312,13 @@ export class LoansService {
   ) {
     const applicantPermissions = await this.userRepository.findOne({
       where: { id: tokenPayload.sub },
-      select: ['id', 'permitions'],
+      select: ['id', 'permissions'],
     });
 
     if (
       userId !== tokenPayload.sub &&
-      !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
-      !applicantPermissions.permitions.includes(RoutePolicies.librarian)
+      !applicantPermissions.permissions.includes(RoutePolicies.admin) &&
+      !applicantPermissions.permissions.includes(RoutePolicies.librarian)
     ) {
       throw new ForbiddenException('You are not the owner of this loan');
     }
@@ -435,13 +435,13 @@ export class LoansService {
 
     const applicantPermissions = await this.userRepository.findOne({
       where: { id: tokenPayload.sub },
-      select: ['id', 'permitions'],
+      select: ['id', 'permissions'],
     });
 
     if (
       loan.user.id !== tokenPayload.sub &&
-      !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
-      !applicantPermissions.permitions.includes(RoutePolicies.librarian)
+      !applicantPermissions.permissions.includes(RoutePolicies.admin) &&
+      !applicantPermissions.permissions.includes(RoutePolicies.librarian)
     ) {
       throw new ForbiddenException('You are not the owner of this loan');
     }

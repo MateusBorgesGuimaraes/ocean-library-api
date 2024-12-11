@@ -34,7 +34,7 @@ export class UsersService {
         name: createUserDto.name,
         email: createUserDto.email,
         passwordHash,
-        permitions: createUserDto.permitions,
+        permissions: createUserDto.permissions,
       };
 
       const newUser = this.userRepository.create(userData);
@@ -107,7 +107,7 @@ export class UsersService {
       where: {
         email: ILike(`%${email}%`),
       },
-      select: ['id', 'name', 'email', 'permitions', 'createdAt', 'updatedAt'],
+      select: ['id', 'name', 'email', 'permissions', 'createdAt', 'updatedAt'],
       order: {
         email: 'ASC',
       },

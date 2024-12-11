@@ -174,8 +174,10 @@ DELETE {{baseUrl}}/books/8
 Authorization: Bearer {{authToken}}
 
 ### Pesquisar um livro
-GET {{baseUrl}}/books/search
+GET {{baseUrl}}/books/search?title=the
 
+### Pesquisar um livro
+GET {{baseUrl}}/books/search-simple?title=the
 
 # EVENTS
 
@@ -266,9 +268,9 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "The Great Gatsby2",
-  "author": "F. Scott Fitzgerald2",
-  "publisher": "Scribner2",
+  "title": "The Great Gatsby2f",
+  "author": "F. Scott Fitzgerald2g",
+  "publisher": "Scribner2gd",
   "year": 1925,
   "genre": "Classic Fiction2"
 }

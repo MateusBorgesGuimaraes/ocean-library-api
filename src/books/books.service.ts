@@ -122,6 +122,57 @@ export class BooksService {
     };
   }
 
+  async searchBooksSimple(searchDto: SearchBookDto) {
+    const queryBuilder = this.bookRepository
+      .createQueryBuilder('book')
+      .select(['book.id', 'book.title'])
+      .leftJoin('book.category', 'category')
+      .skip((searchDto.page - 1) * searchDto.limit)
+      .take(searchDto.limit);
+
+    if (searchDto.title) {
+      queryBuilder.andWhere('LOWER(book.title) LIKE LOWER(:title)', {
+        title: `%${searchDto.title}%`,
+      });
+    }
+
+    if (searchDto.author) {
+      queryBuilder.andWhere('LOWER(book.author) LIKE LOWER(:author)', {
+        author: `%${searchDto.author}%`,
+      });
+    }
+
+    if (searchDto.publisher) {
+      queryBuilder.andWhere('LOWER(book.publisher) LIKE LOWER(:publisher)', {
+        publisher: `%${searchDto.publisher}%`,
+      });
+    }
+
+    if (searchDto.categoryId) {
+      queryBuilder.andWhere('category.id = :categoryId', {
+        categoryId: searchDto.categoryId,
+      });
+    }
+
+    if (searchDto.availability) {
+      queryBuilder.andWhere('book.availability = :availability', {
+        availability: searchDto.availability,
+      });
+    }
+
+    const [books, total] = await queryBuilder.getManyAndCount();
+
+    return {
+      data: books,
+      meta: {
+        page: searchDto.page,
+        limit: searchDto.limit,
+        total,
+        totalPages: Math.ceil(total / searchDto.limit),
+      },
+    };
+  }
+
   async uploadCover(file: Express.Multer.File, id: number) {
     const book = await this.bookRepository.findOneBy({
       id: id,

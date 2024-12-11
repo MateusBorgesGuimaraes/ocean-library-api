@@ -135,14 +135,14 @@ export class LibraryEventsService {
   ) {
     const applicantPermissions = await this.userRepository.findOne({
       where: { id: tokenPayload.sub },
-      select: ['id', 'permitions'],
+      select: ['id', 'permissions'],
     });
 
     if (
       userId !== tokenPayload.sub &&
-      !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
-      !applicantPermissions.permitions.includes(RoutePolicies.librarian) &&
-      !applicantPermissions.permitions.includes(RoutePolicies.socialMedia)
+      !applicantPermissions.permissions.includes(RoutePolicies.admin) &&
+      !applicantPermissions.permissions.includes(RoutePolicies.librarian) &&
+      !applicantPermissions.permissions.includes(RoutePolicies.socialMedia)
     ) {
       throw new ForbiddenException('You are not the owner of this loan');
     }
@@ -193,14 +193,14 @@ export class LibraryEventsService {
   async getUserEvents(userId: number, tokenPayload: TokenPayloadDto) {
     const applicantPermissions = await this.userRepository.findOne({
       where: { id: tokenPayload.sub },
-      select: ['id', 'permitions'],
+      select: ['id', 'permissions'],
     });
 
     if (
       userId !== tokenPayload.sub &&
-      !applicantPermissions.permitions.includes(RoutePolicies.admin) &&
-      !applicantPermissions.permitions.includes(RoutePolicies.librarian) &&
-      !applicantPermissions.permitions.includes(RoutePolicies.socialMedia)
+      !applicantPermissions.permissions.includes(RoutePolicies.admin) &&
+      !applicantPermissions.permissions.includes(RoutePolicies.librarian) &&
+      !applicantPermissions.permissions.includes(RoutePolicies.socialMedia)
     ) {
       throw new ForbiddenException('You are not the owner of this loan');
     }
