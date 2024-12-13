@@ -284,13 +284,17 @@ Authorization: Bearer {{authToken}}
 
 ### Cria um loan
 POST {{baseUrl}}/loans
-Authorization: Bearer {{authToken}}
+Authorization: Bearer {{authToken}} 
 Content-Type: application/json
 
 {
-  "userId": 20,
-  "bookId": 2
+  "userId": 12,
+  "bookId": 23
 }
+
+### Cancela um loan
+DELETE {{baseUrl}}/loans/20/cancel
+Authorization: Bearer {{authToken}} 
 
 ### Pega o loan por id
 GET {{baseUrl}}/loans/8
@@ -313,7 +317,7 @@ PUT {{baseUrl}}/loans/8/return
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os emprestimos do usuario 
-GET {{baseUrl}}/loans/user/20
+GET {{baseUrl}}/loans/user/19
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os emprestimos do usuario por email
@@ -357,6 +361,6 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@example.com",
+  "email": "rukia@example.com",
   "password": "senha123"
 }

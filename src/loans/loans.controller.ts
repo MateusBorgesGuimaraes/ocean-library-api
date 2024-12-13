@@ -10,6 +10,7 @@ import {
   NotFoundException,
   BadRequestException,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { LoansService } from './loans.service';
 import { CreateLoanDto } from './dto/create-loan.dto';
@@ -136,6 +137,21 @@ export class LoansController {
       page,
       limit,
     );
+  }
+
+  @Delete(':id/cancel')
+  @SetRoutePolicy(
+    RoutePolicies.admin,
+    RoutePolicies.librarian,
+    RoutePolicies.user,
+  )
+  @UseGuards(AuthAndPolicyGuard)
+  // @UseGuards(AuthTokenGuard)
+  async deleteLoan(
+    @Param('id', ParseIntPipe) id: number,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    return this.loansService.deleteLoan(id, tokenPayload);
   }
 
   @Get('status/overdue')

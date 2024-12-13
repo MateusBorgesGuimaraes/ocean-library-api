@@ -152,6 +152,56 @@ export class LoansService {
     return cleanLoan as Loan;
   }
 
+  async deleteLoan(loanId: number, tokenPayload: TokenPayloadDto) {
+    const loan = await this.loanRepository.findOne({
+      where: { id: loanId },
+      relations: ['book', 'user'],
+    });
+
+    if (!loan) {
+      throw new NotFoundException('Loan not found');
+    }
+
+    const applicantPermissions = await this.userRepository.findOne({
+      where: { id: tokenPayload.sub },
+      select: ['id', 'permissions'],
+    });
+
+    if (
+      loan.user.id !== tokenPayload.sub &&
+      !applicantPermissions.permissions.includes(RoutePolicies.admin) &&
+      !applicantPermissions.permissions.includes(RoutePolicies.librarian)
+    ) {
+      throw new ForbiddenException(
+        'You are not authorized to delete this loan',
+      );
+    }
+
+    if (loan.status !== LoanStatus.PENDING) {
+      throw new BadRequestException('Can only delete pending loans');
+    }
+
+    const book = loan.book;
+    book.quantity += 1;
+    book.availability = true;
+    await this.bookRepository.save(book);
+
+    await this.loanRepository.remove(loan);
+
+    return {
+      message: 'Loan deleted successfully',
+      loan: {
+        id: loan.id,
+        book: {
+          id: loan.book.id,
+        },
+        user: {
+          id: loan.user.id,
+        },
+      },
+    };
+  }
+
   async pickupBook(
     loanId: number,
     tokenPayload: TokenPayloadDto,
