@@ -6,6 +6,7 @@ import { Book } from 'src/books/entities/book.entity';
 import { News } from 'src/news/entities/news.entity';
 import { LibraryEvent } from 'src/library-events/entities/library-event.entity';
 import { FeaturedType } from './enum/featured-type.enum';
+import { LibraryEventsService } from 'src/library-events/library-events.service';
 
 @Injectable()
 export class EditorChoicesService {
@@ -23,6 +24,7 @@ export class EditorChoicesService {
     private newsRepository: Repository<News>,
     @InjectRepository(LibraryEvent)
     private libraryEventRepository: Repository<News>,
+    private libraryEventsService: LibraryEventsService,
   ) {}
 
   async addEditorChoice(
@@ -181,14 +183,32 @@ export class EditorChoicesService {
   async getAllEditorChoicesContentSimplified(): Promise<{
     books: Book[];
     news: News[];
-    events: LibraryEvent[];
+    events: Array<
+      LibraryEvent & { availableSeats: number; registeredUsers: number }
+    >;
   }> {
     const fullContent = await this.getAllEditorChoicesContent();
+
+    const eventsWithSeatsInfo = await Promise.all(
+      fullContent.events.map(async (choice) => {
+        const event = choice.event;
+
+        // Use the libraryEventsService method to get registrations
+        // You'll need to inject this service in the constructor
+        const eventDetails = await this.libraryEventsService.findOne(event.id);
+
+        return {
+          ...event,
+          availableSeats: eventDetails.availableSeats,
+          registeredUsers: eventDetails.registrations,
+        };
+      }),
+    );
 
     return {
       books: fullContent.books.map((choice) => choice.book),
       news: fullContent.news.map((choice) => choice.news),
-      events: fullContent.events.map((choice) => choice.event),
+      events: eventsWithSeatsInfo,
     };
   }
 }

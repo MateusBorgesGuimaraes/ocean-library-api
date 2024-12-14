@@ -179,13 +179,15 @@ GET {{baseUrl}}/books/search?title=the
 ### Pesquisar um livro
 GET {{baseUrl}}/books/search-simple?title=the
 
+
+
 # EVENTS
 
 ### Exibe todos os eventos
 GET {{baseUrl}}/library-events
 
 ### Exibe um evento pelo id
-GET {{baseUrl}}/library-events/8
+GET {{baseUrl}}/library-events/3
 
 ### Cria um evento
 POST {{baseUrl}}/library-events
@@ -231,7 +233,7 @@ DELETE {{baseUrl}}/library-events/8
 Authorization: Bearer {{authToken}}
 
 ### Registra um usuario para um evento
-POST {{baseUrl}}/library-events/3/register
+POST {{baseUrl}}/library-events/14/register
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
@@ -336,7 +338,7 @@ Authorization: Bearer {{authToken}}
 # EDITOR CHOICES
 
 ### Pega os os items do EC por tipo
-GET {{baseUrl}}/editor-choices/news
+GET {{baseUrl}}/editor-choices/event
 
 ### Adiciona um item no EC
 POST {{baseUrl}}/editor-choices/event/14
@@ -361,6 +363,6 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "rukia@example.com",
+  "email": "nelliel@example.com",
   "password": "senha123"
 }

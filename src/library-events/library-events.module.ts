@@ -12,5 +12,6 @@ import { LibraryEventRegistration } from './entities/library-event-registrations
   ],
   controllers: [LibraryEventsController],
   providers: [LibraryEventsService],
+  exports: [LibraryEventsService],
 })
 export class LibraryEventsModule {}

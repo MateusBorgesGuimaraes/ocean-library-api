@@ -183,11 +183,26 @@ export class LibraryEventsService {
   }
 
   async findOne(id: number) {
-    const libraryEvent = await this.libraryEventsRepository.findOneBy({ id });
+    const libraryEvent = await this.libraryEventsRepository.findOne({
+      where: { id },
+      relations: ['registrations'],
+    });
+
     if (!libraryEvent) {
       throw new NotFoundException('Evento nao encontrado');
     }
-    return libraryEvent;
+
+    return {
+      id: libraryEvent.id,
+      title: libraryEvent.title,
+      description: libraryEvent.description,
+      location: libraryEvent.location,
+      availableSeats: libraryEvent.seats - libraryEvent.registrations.length,
+      banner: libraryEvent.banner,
+      registrations: libraryEvent.registrations.length,
+      date: libraryEvent.date,
+      seats: libraryEvent.seats,
+    };
   }
 
   async getUserEvents(userId: number, tokenPayload: TokenPayloadDto) {
@@ -226,7 +241,7 @@ export class LibraryEventsService {
 
       return {
         userId: user.id,
-        userName: user.name,
+        username: user.name,
         totalRegistrations: 0,
         events: [],
       };
@@ -238,6 +253,7 @@ export class LibraryEventsService {
         id: registration.event.id,
         title: registration.event.title,
         description: registration.event.description,
+        banner: registration.event.banner,
         date: registration.event.date,
         location: registration.event.location,
         seats: registration.event.seats,
@@ -255,7 +271,9 @@ export class LibraryEventsService {
   }
 
   async update(id: number, updateLibraryEventDto: UpdateLibraryEventDto) {
-    const libraryEvent = await this.findOne(id);
+    const libraryEvent = await this.libraryEventsRepository.findOne({
+      where: { id: id },
+    });
     if (!libraryEvent) {
       throw new NotFoundException('libraryEvent not found');
     }
@@ -274,7 +292,9 @@ export class LibraryEventsService {
   }
 
   async remove(id: number) {
-    const libraryEvent = await this.findOne(id);
+    const libraryEvent = await this.libraryEventsRepository.findOne({
+      where: { id: id },
+    });
     if (!libraryEvent) {
       throw new NotFoundException('LibraryEvent not found');
     }
