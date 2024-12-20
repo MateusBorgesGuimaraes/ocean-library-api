@@ -586,17 +586,27 @@ export class LoansService {
     return totalDuration / completedLoans.length / (1000 * 60 * 60 * 24);
   }
 
-  async getUserLoansByEmail(email: string) {
-    const data = await this.userRepository.findOne({
-      where: { email },
-      relations: ['loans', 'loans.book'],
-    });
+  async getUserLoansByEmail(
+    email: string,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    const query = this.loanRepository
+      .createQueryBuilder('loan')
+      .leftJoinAndSelect('loan.user', 'user')
+      .leftJoinAndSelect('loan.book', 'book')
+      .where('user.email = :email', { email });
 
-    if (!data) {
-      throw new NotFoundException('User not found');
+    const [loans, total] = await query
+      .take(limit)
+      .skip((page - 1) * limit)
+      .getManyAndCount();
+
+    if (!loans || loans.length === 0) {
+      throw new NotFoundException('No loans found for this user');
     }
 
-    const cleanLoans = data.loans.map((loan) => {
+    const cleanLoans = loans.map((loan) => {
       return {
         id: loan.id,
         status: loan.status,
@@ -608,9 +618,9 @@ export class LoansService {
           author: loan.book.author,
         },
         user: {
-          id: data.id,
-          name: data.name,
-          email: data.email,
+          id: loan.user.id,
+          name: loan.user.name,
+          email: loan.user.email,
         },
         renewalCount: loan.renewalCount,
         pickupDate: loan.pickupDate,
@@ -618,6 +628,14 @@ export class LoansService {
       };
     });
 
-    return cleanLoans;
+    return {
+      data: cleanLoans,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 }

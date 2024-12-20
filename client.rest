@@ -28,7 +28,7 @@ Content-Type: application/json
 # NEWS
 
 ### Exibe todas as noticias
-GET {{baseUrl}}/news?page=1&limit=20
+GET {{baseUrl}}/news?page=1&limit=10
 
 ### Exibe uma noticia pelo id
 GET {{baseUrl}}/news/9
@@ -174,10 +174,10 @@ DELETE {{baseUrl}}/books/8
 Authorization: Bearer {{authToken}}
 
 ### Pesquisar um livro
-GET {{baseUrl}}/books/search?title=the
+GET {{baseUrl}}/books/search?categoryId=6
 
 ### Pesquisar um livro
-GET {{baseUrl}}/books/search-simple?title=the
+GET {{baseUrl}}/books/search-simple?title=Hobbit
 
 
 
@@ -233,7 +233,7 @@ DELETE {{baseUrl}}/library-events/8
 Authorization: Bearer {{authToken}}
 
 ### Registra um usuario para um evento
-POST {{baseUrl}}/library-events/14/register
+POST {{baseUrl}}/library-events/13/register
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
@@ -299,11 +299,11 @@ DELETE {{baseUrl}}/loans/20/cancel
 Authorization: Bearer {{authToken}} 
 
 ### Pega o loan por id
-GET {{baseUrl}}/loans/8
+GET {{baseUrl}}/loans/26
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os loan 
-GET {{baseUrl}}/loans/findAll/?status=returned
+GET {{baseUrl}}/loans/findAll/?status=
 Authorization: Bearer {{authToken}}
 
 ### Pega o livro
@@ -319,11 +319,11 @@ PUT {{baseUrl}}/loans/8/return
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os emprestimos do usuario 
-GET {{baseUrl}}/loans/user/19
+GET {{baseUrl}}/loans/user/12?limit=1
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os emprestimos do usuario por email
-GET {{baseUrl}}/loans/search/email?email=orihime@example.com
+GET {{baseUrl}}/loans/search/email?email=nelliel@example.com&page=1&limit=2
 Authorization: Bearer {{authToken}}
 
 ### Pega as estatisticas dos esmprestimos
@@ -363,6 +363,6 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "nelliel@example.com",
+  "email": "admin@example.com",
   "password": "senha123"
 }

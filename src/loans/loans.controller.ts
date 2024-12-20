@@ -167,11 +167,18 @@ export class LoansController {
   @Get('search/email')
   @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
   @UseGuards(AuthAndPolicyGuard)
-  async getUserLoanByEmail(@Query('email') email: string) {
+  async getUserLoanByEmail(
+    @Query('email') email: string,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+    @Query('page') pageParam?: string,
+    @Query('limit') limitParam?: string,
+  ) {
+    const page = pageParam ? parseInt(pageParam, 10) : 1;
+    const limit = limitParam ? parseInt(limitParam, 10) : 10;
     if (!email) {
       throw new NotFoundException('Email parameter is required');
     }
-    return this.loansService.getUserLoansByEmail(email);
+    return this.loansService.getUserLoansByEmail(email, page, limit);
   }
 
   @Get('directly/:bookId/:userId')

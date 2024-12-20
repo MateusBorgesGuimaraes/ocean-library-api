@@ -28,8 +28,8 @@ export class CategoryController {
   }
 
   @Get()
-  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
-  @UseGuards(AuthAndPolicyGuard)
+  // @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.stockController)
+  // @UseGuards(AuthAndPolicyGuard)
   findAll() {
     return this.categoryService.findAll();
   }
