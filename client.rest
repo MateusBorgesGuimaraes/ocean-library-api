@@ -20,9 +20,9 @@ POST {{baseUrl}}/users/register
 Content-Type: application/json
 
 {
-  "name": "nemu",
-  "email": "nemu@example.com",
-  "password": "senha123"
+  "name": "uryu",
+  "email": "uryu@gmail.com",
+  "password": "123456"
 }
 
 # NEWS
@@ -38,12 +38,11 @@ POST {{baseUrl}}/news
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
-  {
-    "title": "Ocean Library Offers Free Career Counseling Sessions",
-    "content": "To support job seekers, the Ocean Library is offering free career counseling sessions every Thursday. Experts provide guidance on resume building, interview preparation, and career planning. The initiative has received positive feedback from participants eager to advance their professional goals.",
-    "tags": ["careers", "education", "services"],
-    "isActive": true
-  }
+{
+  "title": "Ocean Library's Coral Reef Monitoring Program Reports Surprising Recovery in Local Reefs",
+  "content": "The Ocean Library's long-running Coral Reef Monitoring Program has reported unexpected positive findings in its latest annual survey, documenting significant recovery in local reef systems previously thought to be severely degraded. The program, which has been tracking coral reef health for the past 15 years, observed a 23% increase in coral coverage in several key monitoring sites. The recovery has been attributed to a combination of local conservation efforts, improved water quality management, and the success of the library's coral restoration project. Lead researcher Dr. Sarah Chen explains, 'These results show that with proper management and community engagement, reef recovery is possible even in areas we once considered lost.' The monitoring program has involved extensive collaboration with local communities, fishing industries, and tourism operators to implement sustainable practices. The success has drawn international attention, with several other coastal regions now looking to replicate the program's approach. The library has announced plans to expand the monitoring program and establish a dedicated coral research center to further study the factors contributing to this remarkable recovery. The findings will be published in next month's issue of Marine Conservation Quarterly, accompanied by detailed recommendations for reef restoration practices.",
+  "tags": ["coral reefs", "conservation", "marine biology", "environmental recovery", "research", "community engagement"]
+}
 
 ### Atualiza uma noticia
 PATCH  {{baseUrl}}/news/9
@@ -58,7 +57,7 @@ Content-Type: application/json
 }
 
 ### Upload da cover Image da noticia
-POST {{baseUrl}}/news/upload-cover-image/20
+POST {{baseUrl}}/news/upload-cover-image/9
 Authorization: Bearer {{authToken}}
 Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 
@@ -66,11 +65,11 @@ Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 Content-Disposition: form-data; name="file"; filename="abc.jpg"
 Content-Type: image/jpeg
 
-< ./dev/images/news-banner-10.jpg
+< ./dev/images/news-9.jpg
 ------BoundaryDelimitadorHttp--
 
 ### Ver capa
-GET {{baseUrl}}/pictures/news-20.jpg
+GET {{baseUrl}}/pictures/news-9.jpg
 
 ### Deleta uma noticia
 DELETE {{baseUrl}}/news/10
@@ -195,14 +194,12 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "Upcoming Event: Art and Illustration Exhibition",
-  "description": "A stunning exhibition showcasing works by local artists, focusing on themes of literature and storytelling through visuals.",
-  "date": "2025-02-05T16:00:00Z",
-  "location": "Main Library - Exhibition Hall",
-  "banner": "art-exhibition.jpg",
-  "seats": 28
-
-
+  "title": "Traditional Maritime Navigation: Ancient Techniques in the Modern World",
+  "description": "Discover the fascinating world of traditional navigation techniques in this unique workshop led by Master Navigator Kekoa Pali'i, a seventh-generation Polynesian wayfinder. This comprehensive day-long workshop combines historical knowledge with practical skills, teaching participants the ancient art of navigation using natural signs such as stars, ocean swells, wind patterns, and marine life behavior. The morning session covers the theoretical foundations of traditional navigation, including star compass construction, wave pattern reading, and understanding weather systems. After lunch, participants will engage in hands-on activities using traditional navigation tools and participating in interactive demonstrations in our marine simulator. The workshop includes a special segment on the cultural significance of traditional navigation in Pacific Islander communities and its relevance in modern marine conservation. Each participant will receive a handcrafted star compass and a detailed manual on traditional navigation techniques. The day concludes with a traditional ceremony and storytelling session about ancient Pacific voyages. This workshop offers a unique opportunity to learn sustainable navigation practices that have been passed down through generations.",
+  "date": "2025-06-20T09:30:00",
+  "location": "Ocean Library Traditional Knowledge Center",
+  "seats": 20
+}
 
 ### Atualiza um evento
 PATCH  {{baseUrl}}/library-events/9
@@ -214,7 +211,7 @@ Content-Type: application/json
 }
 
 ### Upload do banner de um evento
-POST {{baseUrl}}/library-events/upload-banner/14
+POST {{baseUrl}}/library-events/upload-banner/6
 Authorization: Bearer {{authToken}}
 Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 
@@ -222,11 +219,11 @@ Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 Content-Disposition: form-data; name="file"; filename="abc.jpg"
 Content-Type: image/jpeg
 
-< ./dev/images/event-banner-6.jpg
+< ./dev/images/event-6.jpg
 ------BoundaryDelimitadorHttp--
 
 ### Ver capa
-GET {{baseUrl}}/pictures/event-14.jpg
+GET {{baseUrl}}/pictures/event-6.jpg
 
 ### Deleta um evento
 DELETE {{baseUrl}}/library-events/8
@@ -363,6 +360,6 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@example.com",
-  "password": "senha123"
+  "email": "admin@gmail.com",
+  "password": "123456"
 }
