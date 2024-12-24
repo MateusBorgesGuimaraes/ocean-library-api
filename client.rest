@@ -98,7 +98,7 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "name": "misterio"
+  "name": "Art & Photography"
 }
 
 ### Atualiza uma categoria
@@ -132,19 +132,19 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "Dune",
-  "author": "Frank Herbert",
-  "publisher": "Chilton Books",
-  "year": 1965,
-  "isbn": "978-0441172719",
-  "synopsis": "A groundbreaking science fiction epic about politics, religion, and ecological survival on a desert planet.",
-  "availability": true,
-  "quantity": 20,
-  "category": 15
+  "title": "The Complete Sherlock Holmes",
+  "author": "Sir Arthur Conan Doyle",
+  "publisher": "Barnes & Noble",
+  "year": 1986,
+  "isbn": "978-1593080341",
+  "synopsis": "A collection of all four novels and 56 short stories featuring the brilliant detective Sherlock Holmes and his friend Dr. John Watson.",
+  "quantity": 2,
+  "categoryId": 11,
+  "availability": true
 }
 
 ### Upload da capa do livro
-POST {{baseUrl}}/books/upload-cover/37
+POST {{baseUrl}}/books/upload-cover/28
 Authorization: Bearer {{authToken}}
 Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 
@@ -152,11 +152,11 @@ Content-Type: multipart/form-data; boundary=----BoundaryDelimitadorHttp
 Content-Disposition: form-data; name="file"; filename="abc.jpg"
 Content-Type: image/jpeg
 
-< ./dev/images/cover-30.jpg
+< ./dev/images/cover-28.jpg
 ------BoundaryDelimitadorHttp--
 
 ### Ver capa
-GET {{baseUrl}}/pictures/book-37.jpg
+GET {{baseUrl}}/pictures/book-28.jpg
 
 
 ### Atualiza um livro
@@ -338,7 +338,7 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/editor-choices/event
 
 ### Adiciona um item no EC
-POST {{baseUrl}}/editor-choices/event/14
+POST {{baseUrl}}/editor-choices/book/12
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os no EC
