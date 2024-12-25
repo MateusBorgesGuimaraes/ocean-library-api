@@ -6,6 +6,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
+  BadRequestException,
 } from '@nestjs/common';
 import { RequestsService } from './requests.service';
 import { CreateRequestDto } from './dto/create-request.dto';
@@ -27,10 +29,19 @@ export class RequestsController {
   @Get()
   @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
   @UseGuards(AuthAndPolicyGuard)
-  findAll() {
-    return this.requestsService.findAll();
+  findAll(
+    @Query('page') pageParam?: string,
+    @Query('limit') limitParam?: string,
+  ) {
+    const page = pageParam ? parseInt(pageParam, 10) : 1;
+    const limit = limitParam ? parseInt(limitParam, 10) : 10;
+    
+    if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
+      throw new BadRequestException('Invalid page or limit parameters');
+    }
+    return this.requestsService.findAll(page, limit);
   }
-
+ 
   @Delete(':id')
   @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
   @UseGuards(AuthAndPolicyGuard)

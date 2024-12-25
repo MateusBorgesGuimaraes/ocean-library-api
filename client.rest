@@ -258,7 +258,7 @@ Authorization: Bearer {{authToken}}
 # REQUEST
 
 ### Exibe todos os requests
-GET {{baseUrl}}/requests
+GET {{baseUrl}}/requests?page=1&limit=2
 Authorization: Bearer {{authToken}}
 
 ### Cria um request
@@ -267,11 +267,11 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "The Great Gatsby2f",
-  "author": "F. Scott Fitzgerald2g",
-  "publisher": "Scribner2gd",
-  "year": 1925,
-  "genre": "Classic Fiction2"
+  "title": "Gardens of Tomorrow",
+  "author": "James Harrison",
+  "publisher": "Green Leaf Publishing",
+  "year": 2017,
+  "genre": "Science Fiction"
 }
 
 ### Deleta um request
