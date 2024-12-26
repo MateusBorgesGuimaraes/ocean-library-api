@@ -508,6 +508,9 @@ export class LoansService {
       book: {
         id: loan.book.id,
         title: loan.book.title,
+        cover: loan.book.cover,
+        publisher: loan.book.publisher,
+        year: loan.book.year,
         quantity: loan.book.quantity,
         availability: loan.book.availability,
         author: loan.book.author,

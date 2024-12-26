@@ -278,7 +278,6 @@ Content-Type: application/json
 DELETE {{baseUrl}}/requests/4
 Authorization: Bearer {{authToken}}
 
-
 # LOAN
 
 ### Cria um loan
@@ -296,7 +295,7 @@ DELETE {{baseUrl}}/loans/20/cancel
 Authorization: Bearer {{authToken}} 
 
 ### Pega o loan por id
-GET {{baseUrl}}/loans/26
+GET {{baseUrl}}/loans/2
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os loan 
@@ -316,7 +315,7 @@ PUT {{baseUrl}}/loans/8/return
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os emprestimos do usuario 
-GET {{baseUrl}}/loans/user/12?limit=1
+GET {{baseUrl}}/loans/user/10
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os emprestimos do usuario por email
@@ -338,14 +337,14 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/editor-choices/event
 
 ### Adiciona um item no EC
-POST {{baseUrl}}/editor-choices/book/12
+POST {{baseUrl}}/editor-choices/event/4
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os no EC
 GET {{baseUrl}}/editor-choices
 
 ### Remove um item no EC
-DELETE {{baseUrl}}/editor-choices/24
+DELETE {{baseUrl}}/editor-choices/
 Authorization: Bearer {{authToken}}
 
 ### Ordena um item no EC
