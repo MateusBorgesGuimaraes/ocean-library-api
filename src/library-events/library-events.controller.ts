@@ -13,6 +13,7 @@ import {
   UploadedFile,
   ParseFilePipeBuilder,
   HttpStatus,
+  BadRequestException,
 } from '@nestjs/common';
 import { LibraryEventsService } from './library-events.service';
 import { CreateLibraryEventDto } from './dto/create-library-event.dto';
@@ -71,8 +72,18 @@ export class LibraryEventsController {
   }
 
   @Get()
-  findAll() {
-    return this.libraryEventsService.findAll();
+  findAll(
+    @Query('page') pageParam?: string,
+    @Query('limit') limitParam?: string,
+  ) {
+    const page = pageParam ? parseInt(pageParam, 10) : 1;
+    const limit = limitParam ? parseInt(limitParam, 10) : 10;
+
+    if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
+      throw new BadRequestException('Invalid page or limit parameters');
+    }
+
+    return this.libraryEventsService.findAll(page, limit);
   }
 
   @Get(':id')

@@ -16,6 +16,7 @@ import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 import { RoutePolicies } from 'src/auth/enum/route-policies.enum';
 import * as path from 'path';
 import * as fs from 'fs/promises';
+import { create } from 'domain';
 
 @Injectable()
 export class LibraryEventsService {
@@ -174,12 +175,37 @@ export class LibraryEventsService {
     };
   }
 
-  async findAll() {
-    const libraryEvents = await this.libraryEventsRepository.find();
-    if (!libraryEvents) {
-      throw new NotFoundException('Não foi encontrado nenhum evento');
-    }
-    return libraryEvents;
+  async findAll(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+
+    const [events, total] = await this.libraryEventsRepository.findAndCount({
+      order: {
+        id: 'DESC',
+      },
+      relations: ['registrations'],
+      skip,
+      take: limit,
+    });
+
+    const mappedEvents = events.map((event) => ({
+      id: event.id,
+      title: event.title,
+      location: event.location,
+      availableSeats: event.seats - event.registrations.length,
+      banner: event.banner,
+      registrations: event.registrations.length,
+      date: event.date,
+      seats: event.seats,
+      createdAt: event.createdAt,
+      updatedAt: event.updatedAt,
+    }));
+
+    return {
+      data: mappedEvents,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: number) {

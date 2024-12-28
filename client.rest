@@ -183,7 +183,7 @@ GET {{baseUrl}}/books/search-simple?title=Hobbit
 # EVENTS
 
 ### Exibe todos os eventos
-GET {{baseUrl}}/library-events
+GET {{baseUrl}}/library-events?page=1&limit=4
 
 ### Exibe um evento pelo id
 GET {{baseUrl}}/library-events/3
