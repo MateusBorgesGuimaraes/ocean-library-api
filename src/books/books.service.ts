@@ -30,7 +30,10 @@ export class BooksService {
   }
 
   async findOne(id: number) {
-    const book = await this.bookRepository.findOneBy({ id });
+    const book = await this.bookRepository.findOne({
+      where: { id },
+      relations: ['category'],
+    });
     if (book) return book;
     throw new NotFoundException('Book not found');
   }
@@ -202,5 +205,24 @@ export class BooksService {
 
     await this.bookRepository.save(book);
     return book;
+  }
+
+  async findAll(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const [books, total] = await this.bookRepository.findAndCount({
+      skip,
+      take: limit,
+      relations: ['category'],
+      order: {
+        id: 'DESC',
+      },
+    });
+
+    return {
+      data: books,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }

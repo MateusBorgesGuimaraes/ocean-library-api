@@ -76,7 +76,7 @@ DELETE {{baseUrl}}/news/10
 Authorization: Bearer {{authToken}}
 
 ### Pesquisa as noticias pelo titulo
-GET {{baseUrl}}/news/search/title?title=Local
+GET {{baseUrl}}/news/search/title?title=sea
 Authorization: Bearer {{authToken}}
 
 
@@ -114,14 +114,17 @@ Content-Type: application/json
 DELETE {{baseUrl}}/category/19
 Authorization: Bearer {{authToken}}
 
-
-
+### Categoria por nome
+GET {{baseUrl}}/category/name/fant
 
 
 # BOOK
 
 ### Exibe um livro pelo id
 GET {{baseUrl}}/books/7
+
+### Pega todos os livros
+GET {{baseUrl}}/books?page=1&limit=4
 
 ### Pega os ultimos 8 livros adicionados
 GET {{baseUrl}}/books/latest
@@ -132,14 +135,14 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-  "title": "The Complete Sherlock Holmes",
-  "author": "Sir Arthur Conan Doyle",
-  "publisher": "Barnes & Noble",
+  "title": "The Complete Sherlock Holmesdsadagfd",
+  "author": "Sir Arthur Conan Doylegsg",
+  "publisher": "Barnes & Noblefdsf",
   "year": 1986,
   "isbn": "978-1593080341",
   "synopsis": "A collection of all four novels and 56 short stories featuring the brilliant detective Sherlock Holmes and his friend Dr. John Watson.",
   "quantity": 2,
-  "categoryId": 11,
+  "category": 11,
   "availability": true
 }
 
@@ -173,7 +176,7 @@ DELETE {{baseUrl}}/books/8
 Authorization: Bearer {{authToken}}
 
 ### Pesquisar um livro
-GET {{baseUrl}}/books/search?categoryId=6
+GET {{baseUrl}}/books/search?title=Hobbit
 
 ### Pesquisar um livro
 GET {{baseUrl}}/books/search-simple?title=Hobbit
@@ -239,7 +242,7 @@ Content-Type: application/json
 }
 
 ### Ve os registros no evento
-GET {{baseUrl}}/library-events/3/registrations
+GET {{baseUrl}}/library-events/6/registrations
 Authorization: Bearer {{authToken}}
 
 ### Ve todos o eventos que o usuario esta cadastrado
@@ -251,7 +254,7 @@ DELETE {{baseUrl}}/library-events/3/registrations/12
 Authorization: Bearer {{authToken}}
 
 ### Pesquisa os evento pelo titulo
-GET {{baseUrl}}/library-events/search/title?title=Digital
+GET {{baseUrl}}/library-events/search/title?title=sea
 Authorization: Bearer {{authToken}}
 
 

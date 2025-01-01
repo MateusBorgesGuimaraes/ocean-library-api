@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class CategoryService {
@@ -20,18 +20,43 @@ export class CategoryService {
     }
   }
 
-  async findAll() {
-    const category = await this.categoryRepository.find({
+  async findAllWhitoutPagination() {
+    return this.categoryRepository.find({
+      order: {
+        id: 'desc',
+      },
+    });
+  }
+
+  async findAll(page: number = 1, limit: number = 4) {
+    const skip = (page - 1) * limit;
+    const [requests, total] = await this.categoryRepository.findAndCount({
+      skip,
+      take: limit,
       order: {
         id: 'desc',
       },
     });
 
-    return category;
+    return {
+      data: requests,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: number) {
     const category = await this.categoryRepository.findOneBy({ id });
+    if (category) return category;
+
+    throw new NotFoundException('Category not found');
+  }
+
+  async findByName(name: string) {
+    const category = await this.categoryRepository.find({
+      where: { name: ILike(`%${name}%`) },
+    });
     if (category) return category;
 
     throw new NotFoundException('Category not found');

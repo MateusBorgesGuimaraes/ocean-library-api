@@ -12,6 +12,7 @@ import {
   UploadedFile,
   ParseFilePipeBuilder,
   HttpStatus,
+  BadRequestException,
   // BadRequestException,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
@@ -56,6 +57,21 @@ export class BooksController {
     @Param('id') id: string,
   ) {
     return this.booksService.uploadCover(file, +id);
+  }
+
+  @Get()
+  findAll(
+    @Query('page') pageParam?: string,
+    @Query('limit') limitParam?: string,
+  ) {
+    const page = pageParam ? parseInt(pageParam, 10) : 1;
+    const limit = limitParam ? parseInt(limitParam, 10) : 10;
+
+    if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
+      throw new BadRequestException('Invalid page or limit parameters');
+    }
+
+    return this.booksService.findAll(+page, +limit);
   }
 
   @Get('latest')
