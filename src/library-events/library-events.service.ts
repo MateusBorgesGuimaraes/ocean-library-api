@@ -358,6 +358,21 @@ export class LibraryEventsService {
     }));
   }
 
+  async attendEvent(eventId: number, userId: number) {
+    const registration = await this.registrationRepository.findOne({
+      where: {
+        user: { id: userId },
+        event: { id: eventId },
+      },
+    });
+    if (!registration) {
+      throw new NotFoundException('Registration not found');
+    }
+    registration.attended = !registration.attended;
+    await this.registrationRepository.save(registration);
+    return registration;
+  }
+
   async uploadBanner(file: Express.Multer.File, id: number) {
     const event = await this.libraryEventsRepository.findOneBy({
       id: id,

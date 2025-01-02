@@ -141,6 +141,16 @@ export class LibraryEventsController {
     return this.libraryEventsService.remove(+id);
   }
 
+  @Patch(':eventId/registrations/:userId/attended')
+  @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.librarian)
+  @UseGuards(AuthAndPolicyGuard)
+  attendEvent(
+    @Param('eventId') eventId: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.libraryEventsService.attendEvent(+eventId, +userId);
+  }
+
   @Delete(':eventId/registrations/:userId')
   @SetRoutePolicy(RoutePolicies.admin, RoutePolicies.user)
   @UseGuards(AuthAndPolicyGuard)

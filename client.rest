@@ -15,6 +15,15 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/users/search/email?email=ru
 Authorization: Bearer {{authToken}}
 
+### Muda as permissoes de um usuario
+PATCH {{baseUrl}}/users/10/permissions
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "permissions": ["user"]
+}
+
 ### Cria um usuario
 POST {{baseUrl}}/users/register
 Content-Type: application/json
@@ -213,6 +222,10 @@ Content-Type: application/json
   "title": "Digital Research Workshop"
 }
 
+### Marcar presença
+PATCH {{baseUrl}}/library-events/4/registrations/10
+Authorization: Bearer {{authToken}}
+
 ### Upload do banner de um evento
 POST {{baseUrl}}/library-events/upload-banner/6
 Authorization: Bearer {{authToken}}
@@ -246,7 +259,7 @@ GET {{baseUrl}}/library-events/6/registrations
 Authorization: Bearer {{authToken}}
 
 ### Ve todos o eventos que o usuario esta cadastrado
-GET {{baseUrl}}/library-events/user/12/events
+GET {{baseUrl}}/library-events/user/10/events
 Authorization: Bearer {{authToken}}
 
 ### Cancela o registro
@@ -318,11 +331,11 @@ PUT {{baseUrl}}/loans/8/return
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os emprestimos do usuario 
-GET {{baseUrl}}/loans/user/10
+GET {{baseUrl}}/loans/user/10?page=1&limit=2
 Authorization: Bearer {{authToken}}
 
 ### Pega todos os emprestimos do usuario por email
-GET {{baseUrl}}/loans/search/email?email=nelliel@example.com&page=1&limit=2
+GET {{baseUrl}}/loans/search/email?email=rukia@gmail.com&page=1&limit=2
 Authorization: Bearer {{authToken}}
 
 ### Pega as estatisticas dos esmprestimos
